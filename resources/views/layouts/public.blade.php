@@ -155,8 +155,13 @@
     <nav>
         <div class="container nav-content">
             <a href="{{ route('public.expense.index') }}" class="logo">MyBudget</a>
-            <div class="nav-links">
-                <a href="{{ route('public.expense.index') }}">Dashboard</a>
+            <div class="nav-links" style="display: flex; align-items: center; gap: 1.5rem;">
+                <a href="{{ route('public.finance.budget.index') }}" class="btn {{ request()->routeIs('public.finance.budget.*') ? 'btn-primary' : 'btn-outline' }}" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem;">
+                    Manage Budgets
+                </a>
+                <a href="{{ route('public.expense.index') }}" class="btn {{ request()->routeIs('public.expense.*') ? 'btn-primary' : 'btn-outline' }}" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem;">
+                    Dashboard
+                </a>
             </div>
         </div>
     </nav>
