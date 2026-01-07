@@ -18,4 +18,9 @@ Route::prefix('public')->name('public.')->group(function () {
         Route::post('/', [ExpenseController::class, 'store'])->name('store');
     });
 
+    // DOMAIN: FINANCE
+    Route::prefix('finance')->name('finance.')->group(function () {
+        Route::resource('budget', \App\Http\Controllers\Public\Finance\BudgetController::class);
+    });
+
 });
