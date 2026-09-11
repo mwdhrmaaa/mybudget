@@ -2,6 +2,8 @@ import { DEFAULT_EXPENSES, DEFAULT_BUDGETS } from "./default_data.js";
 
 const EXPENSE_KEY = "mybudget_expenses_v2";
 const BUDGET_KEY = "mybudget_budgets_v2";
+const MODE_KEY = "mybudget_view_mode_v2";
+
 
 // Memory storage fallback for Node.js test environment
 const memoryStore = {};
@@ -60,6 +62,15 @@ class StorageStore {
 
     saveBudgets(budgets) {
         storageEngine.setItem(BUDGET_KEY, JSON.stringify(budgets));
+        this.notify();
+    }
+
+    getViewMode() {
+        return storageEngine.getItem(MODE_KEY) || "pro";
+    }
+
+    saveViewMode(mode) {
+        storageEngine.setItem(MODE_KEY, mode);
         this.notify();
     }
 
