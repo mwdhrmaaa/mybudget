@@ -1,36 +1,22 @@
-FROM php:8.2-fpm-alpine
+FROM nginx:1.25-alpine
 
-# Install system dependencies & build tools
-RUN apk update && apk add --no-cache \
-    git \
-    curl \
-    libpng-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    oniguruma-dev \
-    libzip-dev \
-    sqlite-dev \
-    nodejs \
-    npm \
-    bash \
-    mysql-client
+# Copy static assets to nginx html root
+COPY . /usr/share/nginx/html
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql pdo_sqlite mbstring zip exif pcntl bcmath gd
+# Replace default nginx config with lightweight SPA configuration
+RUN printf 'server {\n\
+    listen 80;\n\
+    server_name localhost;\n\
+    root /usr/share/nginx/html;\n\
+    index index.html;\n\
+    location / {\n\
+        try_files $uri $uri/ /index.html;\n\
+    }\n\
+    location ~* \\.(css|js|png|jpg|jpeg|gif|ico|svg|woff2)$ {\n\
+        expires 1y;\n\
+        add_header Cache-Control "public, no-transform";\n\
+    }\n\
+}\n' > /etc/nginx/conf.d/default.conf
 
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Set working directory
-WORKDIR /var/www
-
-# Copy existing application directory
-COPY . /var/www
-
-# Set permissions
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
-
-EXPOSE 9000
-CMD ["php-fpm"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

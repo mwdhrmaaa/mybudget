@@ -1,65 +1,9 @@
 services:
-  app:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: mybudget_app
-    restart: unless-stopped
-    working_dir: /var/www
-    environment:
-      APP_ENV: ${APP_ENV:-production}
-      APP_DEBUG: ${APP_DEBUG:-false}
-      DB_CONNECTION: mysql
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_DATABASE: ${DB_DATABASE:-mybudget_db}
-      DB_USERNAME: ${DB_USERNAME:-mybudget_user}
-      DB_PASSWORD: ${DB_PASSWORD:-mybudget_pass}
-    volumes:
-      - .:/var/www
-    networks:
-      - mybudget_network
-    depends_on:
-      db:
-        condition: service_healthy
-
-  web:
-    image: nginx:1.25-alpine
-    container_name: mybudget_web
+    container_name: mybudget_static_app
     restart: unless-stopped
     ports:
-      - "${FORWARD_DB_PORT:-8080}:80"
-    volumes:
-      - .:/var/www
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - mybudget_network
-    depends_on:
-      - app
-
-  db:
-    image: mariadb:10.11
-    container_name: mybudget_db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-mybudget_db}
-      MYSQL_USER: ${DB_USERNAME:-mybudget_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-mybudget_pass}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_secret}
-    volumes:
-      - mybudget_dbdata:/var/lib/mysql
-    networks:
-      - mybudget_network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_secret"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-
-networks:
-  mybudget_network:
-    driver: bridge
-
-volumes:
-  mybudget_dbdata:
-    driver: local
+      - "${PORT:-8080}:80"

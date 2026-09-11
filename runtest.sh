@@ -5,15 +5,13 @@ APP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$APP_DIR"
 
 echo "==================================================================="
-echo "[*] Running MyBudget Automated Feature & Unit Test Suite"
+echo "[*] Running MyBudget Automated Domain & Analytics Test Suite"
 echo "==================================================================="
 
-if command -v docker >/dev/null 2>&1 && [ "$(docker inspect -f '{{.State.Running}}' mybudget_app 2>/dev/null)" == "true" ]; then
-    echo "[*] Executing tests inside Docker app container..."
-    docker compose exec -T app php artisan test
+if command -v node >/dev/null 2>&1; then
+    node --test tests/**/*.test.js
+    echo "[OK] All test suites passed."
 else
-    echo "[*] Executing tests locally..."
-    php artisan test
+    echo "[x] Node.js is required to execute the test suite."
+    exit 1
 fi
-
-echo "[OK] Test suite execution complete."
