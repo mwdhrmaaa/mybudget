@@ -3,7 +3,7 @@
    =================================================================== */
 .glass-panel {
     background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
+    border: 1.5px solid var(--border-card);
     border-radius: var(--radius-lg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -11,7 +11,7 @@
 }
 
 .glass-panel:hover {
-    border-color: var(--border-highlight);
+    border-color: var(--border-card-hover);
 }
 
 /* Nav Button States */
@@ -71,25 +71,25 @@
 
 .btn-ghost {
     background: transparent;
-    border: 1px solid var(--border-subtle);
+    border: 1.5px solid var(--border-card);
     color: var(--text-secondary);
 }
 
 .btn-ghost:hover {
     background: rgba(255, 255, 255, 0.04);
-    border-color: var(--border-highlight);
+    border-color: var(--border-card-hover);
     color: var(--text-primary);
 }
 
 .btn-danger-ghost {
     background: transparent;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    border: 1.5px solid rgba(239, 68, 68, 0.35);
     color: #f87171;
 }
 
 .btn-danger-ghost:hover {
     background: rgba(239, 68, 68, 0.1);
-    border-color: rgba(239, 68, 68, 0.4);
+    border-color: rgba(239, 68, 68, 0.6);
     color: #ef4444;
 }
 
@@ -99,7 +99,7 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.25rem 0.65rem;
-    border-radius: 0;
+    border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -108,19 +108,19 @@
 .badge-safe {
     background: rgba(16, 185, 129, 0.12);
     color: #34d399;
-    border: 1px solid rgba(16, 185, 129, 0.25);
+    border: 1.5px solid rgba(16, 185, 129, 0.35);
 }
 
 .badge-warning {
     background: rgba(245, 158, 11, 0.12);
     color: #fbbf24;
-    border: 1px solid rgba(245, 158, 11, 0.25);
+    border: 1.5px solid rgba(245, 158, 11, 0.35);
 }
 
 .badge-danger {
     background: rgba(239, 68, 68, 0.12);
     color: #f87171;
-    border: 1px solid rgba(239, 68, 68, 0.25);
+    border: 1.5px solid rgba(239, 68, 68, 0.35);
 }
 
 /* Modal Window */
@@ -145,7 +145,7 @@
 
 .modal-dialog {
     background: var(--bg-surface);
-    border: 1px solid var(--border-highlight);
+    border: 2px solid var(--border-card-hover);
     border-radius: var(--radius-xl);
     width: 90%;
     max-width: 520px;
@@ -177,7 +177,7 @@
 .form-input, .form-select {
     width: 100%;
     background: var(--bg-surface-elevated);
-    border: 1px solid var(--border-subtle);
+    border: 1.5px solid var(--border-card);
     border-radius: var(--radius-md);
     padding: 0.75rem 1rem;
     color: var(--text-primary);
@@ -188,5 +188,5 @@
 
 .form-input:focus, .form-select:focus {
     border-color: var(--accent-brand);
-    box-shadow: 0 0 0 1px var(--accent-brand);
+    box-shadow: 0 0 0 3px var(--accent-brand-glow);
 }
