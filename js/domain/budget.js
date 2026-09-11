@@ -89,6 +89,18 @@ export function updateBudget(id, payload) {
 }
 
 export function deleteBudget(id) {
-    const list = store.getBudgets().filter(item => item.id !== id);
+    const list = store.getBudgets();
+    const item = list.find(entry => entry.id === id);
+    if (!item) return null;
+    const remaining = list.filter(entry => entry.id !== id);
+    store.saveBudgets(remaining);
+    return item;
+}
+
+export function restoreBudget(budget) {
+    if (!budget || !budget.id) return;
+    const list = store.getBudgets();
+    if (list.some(entry => entry.id === budget.id)) return;
+    list.unshift(budget);
     store.saveBudgets(list);
 }
