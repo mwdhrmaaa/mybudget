@@ -80,6 +80,7 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
                         <span>Simpan</span>
                     </button>
                 </form>
+                <div id="quickAmountPreview" class="amount-live-preview"></div>
             </div>
 
             <!-- Recent Compact List -->
@@ -130,6 +131,19 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
     `;
 
     // Bind Quick Add
+    const quickAmount = document.getElementById("quickAmount");
+    const quickPreview = document.getElementById("quickAmountPreview");
+    quickAmount?.addEventListener("input", () => {
+        const val = parseFloat(quickAmount.value);
+        if (!isNaN(val) && val > 0 && quickPreview) {
+            quickPreview.textContent = formatCurrency(val);
+            quickPreview.classList.add("active");
+        } else if (quickPreview) {
+            quickPreview.textContent = "";
+            quickPreview.classList.remove("active");
+        }
+    });
+
     document.getElementById("simpleQuickAddForm")?.addEventListener("submit", (e) => {
         e.preventDefault();
         const type = document.getElementById("quickType").value;
@@ -147,6 +161,10 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
         });
         document.getElementById("quickAmount").value = "";
         document.getElementById("quickDesc").value = "";
+        if (quickPreview) {
+            quickPreview.textContent = "";
+            quickPreview.classList.remove("active");
+        }
     });
 
     // Bind Deletes

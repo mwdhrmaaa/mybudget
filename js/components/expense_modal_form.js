@@ -1,4 +1,5 @@
 import { modal } from "./modal.js";
+import { formatCurrency } from "./metrics.js";
 
 /**
  * Expense and Income Transaction Modal Form Renderer
@@ -30,6 +31,7 @@ export function openExpenseModal(existingExpense = null, { categories = [], onSu
             <div class="form-group">
                 <label class="form-label" id="amountFieldLabel">Nominal (Rp)</label>
                 <input type="number" step="0.01" id="formExpAmount" class="form-input" value="${isEdit ? existingExpense.amount : ''}" placeholder="0" required autofocus>
+                <div id="amountLivePreview" class="amount-live-preview"></div>
             </div>
             <div class="form-group">
                 <label class="form-label">Kategori</label>
@@ -54,6 +56,23 @@ export function openExpenseModal(existingExpense = null, { categories = [], onSu
     `;
 
     modal.open(isEdit ? "Ubah Catatan Transaksi" : "Catat Transaksi Baru", formHtml);
+
+    const amountInput = document.getElementById("formExpAmount");
+    const amountPreview = document.getElementById("amountLivePreview");
+
+    const updateAmountPreview = () => {
+        const val = parseFloat(amountInput?.value);
+        if (!isNaN(val) && val > 0 && amountPreview) {
+            amountPreview.textContent = formatCurrency(val);
+            amountPreview.classList.add("active");
+        } else if (amountPreview) {
+            amountPreview.textContent = "";
+            amountPreview.classList.remove("active");
+        }
+    };
+
+    amountInput?.addEventListener("input", updateAmountPreview);
+    if (isEdit && existingExpense?.amount) updateAmountPreview();
 
     document.getElementById("cancelModalBtn")?.addEventListener("click", () => modal.close());
     
