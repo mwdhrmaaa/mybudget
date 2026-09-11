@@ -1,16 +1,15 @@
 import { restoreExpense } from "../domain/expense.js";
 
 /**
- * Floating Undo Toast Manager
- * Displays a non-intrusive floating notification when an expense record is deleted.
- * Provides a 5-second window with an Undo button to restore the deleted record.
+ * Floating Undo Toast Manager with Multi-Item Stacking
+ * Supports multiple rapid deletions by stacking independent notifications.
+ * Each toast provides its own 5-second countdown and Undo trigger.
  */
 class ToastManager {
     constructor() {
         this.container = null;
-        this.card = null;
-        this.timeoutId = null;
-        this.currentExpense = null;
+        this.activeToasts = new Map();
+        this.maxVisible = 5;
     }
 
     init() {
@@ -29,13 +28,13 @@ class ToastManager {
         if (typeof document === "undefined" || !expense) return;
         this.init();
 
-        // Clear any active dismiss timer
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
-            this.timeoutId = null;
+        // If stack exceeds maximum visible, smoothly dismiss the oldest
+        if (this.activeToasts.size >= this.maxVisible) {
+            const oldestId = this.activeToasts.keys().next().value;
+            this.dismissToast(oldestId);
         }
 
-        this.currentExpense = expense;
+        const toastId = "toast-" + Date.now() + "-" + Math.random().toString(36).substring(2, 7);
 
         const formattedAmount = new Intl.NumberFormat("id-ID", {
             style: "currency",
@@ -45,76 +44,77 @@ class ToastManager {
 
         const desc = expense.description || "Catatan transaksi";
 
-        this.container.innerHTML = `
-            <div class="toast-card" id="activeToastCard">
-                <div class="toast-body">
-                    <span class="toast-badge">Catatan Dihapus</span>
-                    <span class="toast-meta" title="${desc}">
-                        ${desc} &bull; <span class="toast-amount">${formattedAmount}</span>
-                    </span>
-                </div>
-                <div class="toast-actions">
-                    <button type="button" class="btn-toast-undo" id="btnToastUndo" title="Urungkan penghapusan">
-                        <i data-lucide="rotate-ccw" style="width: 13px; height: 13px;"></i>
-                        <span>Undo</span>
-                    </button>
-                    <button type="button" class="btn-toast-close" id="btnToastClose" title="Tutup">
-                        <i data-lucide="x" style="width: 14px; height: 14px;"></i>
-                    </button>
-                </div>
-                <div class="toast-progress-bar" style="animation-duration: ${duration}ms;"></div>
+        const card = document.createElement("div");
+        card.className = "toast-card";
+        card.id = toastId;
+        card.innerHTML = `
+            <div class="toast-body">
+                <span class="toast-badge">Catatan Dihapus</span>
+                <span class="toast-meta" title="${desc}">
+                    ${desc} &bull; <span class="toast-amount">${formattedAmount}</span>
+                </span>
             </div>
+            <div class="toast-actions">
+                <button type="button" class="btn-toast-undo" title="Urungkan penghapusan">
+                    <i data-lucide="rotate-ccw" style="width: 13px; height: 13px;"></i>
+                    <span>Undo</span>
+                </button>
+                <button type="button" class="btn-toast-close" title="Tutup">
+                    <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                </button>
+            </div>
+            <div class="toast-progress-bar" style="animation-duration: ${duration}ms;"></div>
         `;
 
-        this.card = document.getElementById("activeToastCard");
-
-        // Trigger reflow for CSS animation
-        requestAnimationFrame(() => {
-            if (this.card) this.card.classList.add("show");
-        });
-
-        if (window.lucide) window.lucide.createIcons();
+        this.container.appendChild(card);
 
         // Bind Undo Action
-        const undoBtn = document.getElementById("btnToastUndo");
+        const undoBtn = card.querySelector(".btn-toast-undo");
         if (undoBtn) {
             undoBtn.addEventListener("click", () => {
-                if (this.currentExpense) {
-                    restoreExpense(this.currentExpense);
-                    this.currentExpense = null;
-                }
-                this.hide();
+                restoreExpense(expense);
+                this.dismissToast(toastId);
             });
         }
 
         // Bind Close Action
-        const closeBtn = document.getElementById("btnToastClose");
+        const closeBtn = card.querySelector(".btn-toast-close");
         if (closeBtn) {
             closeBtn.addEventListener("click", () => {
-                this.hide();
+                this.dismissToast(toastId);
             });
         }
 
-        // Set 5-second auto-dismiss
-        this.timeoutId = setTimeout(() => {
-            this.hide();
+        // Set 5-second auto-dismiss for this specific toast
+        const timeoutId = setTimeout(() => {
+            this.dismissToast(toastId);
         }, duration);
+
+        this.activeToasts.set(toastId, { card, timeoutId, expense });
+
+        // Trigger entrance animation
+        requestAnimationFrame(() => {
+            card.classList.add("show");
+        });
+
+        if (window.lucide) window.lucide.createIcons();
     }
 
-    hide() {
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
-            this.timeoutId = null;
+    dismissToast(toastId) {
+        const entry = this.activeToasts.get(toastId);
+        if (!entry) return;
+
+        if (entry.timeoutId) {
+            clearTimeout(entry.timeoutId);
         }
-        if (this.card) {
-            this.card.classList.remove("show");
-            setTimeout(() => {
-                if (this.card && !this.card.classList.contains("show")) {
-                    this.container.innerHTML = "";
-                    this.card = null;
-                }
-            }, 250);
-        }
+
+        entry.card.classList.remove("show");
+        entry.card.classList.add("dismissing");
+
+        setTimeout(() => {
+            entry.card.remove();
+            this.activeToasts.delete(toastId);
+        }, 250);
     }
 }
 
