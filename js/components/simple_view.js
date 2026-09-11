@@ -93,7 +93,7 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
                         ${recentExpenses.map(exp => `
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); transition: var(--transition-smooth);" onmouseover="this.style.borderColor='var(--border-highlight)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
                                 <div style="display: flex; align-items: center; gap: 0.75rem; overflow: hidden;">
-                                    <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <div style="width: 32px; height: 32px; border-radius: 0; background: rgba(59, 130, 246, 0.1); color: #60a5fa; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                         <i data-lucide="tag" style="width: 14px; height: 14px;"></i>
                                     </div>
                                     <div style="overflow: hidden;">
