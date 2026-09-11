@@ -12,6 +12,7 @@ import { toast } from "./components/toast.js";
 import { openExpenseModal } from "./components/expense_modal_form.js";
 import { openBudgetModal } from "./components/budget_modal_form.js";
 import { openShortcutsModal } from "./components/shortcuts_modal.js";
+import { initSidebar, updateSidebarState } from "./components/sidebar.js";
 import { setupDataTransfer } from "./actions/data_transfer.js";
 import { initKeyboardShortcuts } from "./controllers/shortcuts.js";
 
@@ -109,7 +110,8 @@ class App {
             onToggleMode: () => this.toggleViewMode(),
             onFocusSearch: () => this.filterSearch?.focus(),
             onCloseModal: () => modal.close(),
-            onShowHelp: () => openShortcutsModal()
+            onShowHelp: () => openShortcutsModal(),
+            onToggleSidebar: () => document.getElementById("sidebarToggleBtn")?.click()
         });
 
         const updateOnlineStatus = () => {
@@ -126,6 +128,13 @@ class App {
         window.addEventListener("online", updateOnlineStatus);
         window.addEventListener("offline", updateOnlineStatus);
         updateOnlineStatus();
+
+        initSidebar({
+            onTabChange: (tab) => this.switchTab(tab),
+            onModeToggle: () => this.toggleViewMode(),
+            onAddExpense: () => this.openExpenseForm(),
+            onShowHelp: () => openShortcutsModal()
+        });
     }
 
     toggleViewMode() {
@@ -144,18 +153,22 @@ class App {
         if (this.dashboardSection) this.dashboardSection.style.display = isSimple ? "none" : (this.currentTab === "dashboard" ? "flex" : "none");
         if (this.budgetsSection) this.budgetsSection.style.display = isSimple ? "none" : (this.currentTab === "budgets" ? "flex" : "none");
         if (this.simpleSection) this.simpleSection.style.display = isSimple ? "flex" : "none";
+        updateSidebarState({ currentTab: this.currentTab, viewMode: this.viewMode });
         if (!isSimple) this.switchTab(this.currentTab);
         if (window.lucide) window.lucide.createIcons();
     }
 
     switchTab(tabName) {
-        if (this.viewMode === "simple") return;
+        if (this.viewMode === "simple") {
+            this.toggleViewMode();
+        }
         this.currentTab = tabName;
         const isDash = tabName === "dashboard";
         if (this.dashboardSection) this.dashboardSection.style.display = isDash ? "flex" : "none";
         if (this.budgetsSection) this.budgetsSection.style.display = isDash ? "none" : "flex";
         this.tabDashboardBtn?.classList.toggle("active", isDash);
         this.tabBudgetsBtn?.classList.toggle("active", !isDash);
+        updateSidebarState({ currentTab: this.currentTab, viewMode: this.viewMode });
         if (window.lucide) window.lucide.createIcons();
     }
 

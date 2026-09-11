@@ -1,9 +1,10 @@
-const CACHE_NAME = "mybudget-static-v5";
+const CACHE_NAME = "mybudget-static-v6";
 const ASSETS = [
     "./",
     "./index.html",
     "./css/theme.css",
     "./css/layout.css",
+    "./css/sidebar.css",
     "./css/components.css",
     "./css/toast.css",
     "./js/app.js",
@@ -18,6 +19,7 @@ const ASSETS = [
     "./js/components/metrics.js",
     "./js/components/charts.js",
     "./js/components/modal.js",
+    "./js/components/sidebar.js",
     "./js/components/expense_view.js",
     "./js/components/budget_view.js",
     "./js/components/simple_view.js",
