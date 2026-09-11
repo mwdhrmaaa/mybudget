@@ -16,21 +16,30 @@ export function renderExpenseTable(containerEl, expenses, onEdit) {
         return;
     }
 
-    const rows = expenses.map(exp => `
+    const rows = expenses.map(exp => {
+        const isIncome = exp.type === "income";
+        const amountDisplay = (isIncome ? "+ " : "- ") + formatCurrency(exp.amount);
+        const amountColor = isIncome ? "#34d399" : "#f4f4f6";
+        const badgeStyle = isIncome
+            ? "background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1.5px solid rgba(16, 185, 129, 0.35); border-radius: 9999px;"
+            : "background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1.5px solid rgba(59, 130, 246, 0.35); border-radius: 9999px;";
+
+        return `
         <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04); transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(255, 255, 255, 0.02)'" onmouseout="this.style.background='transparent'">
             <td style="padding: 1rem; white-space: nowrap; color: var(--text-secondary);">
                 ${new Date(exp.expenseDate).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
             </td>
             <td style="padding: 1rem; white-space: nowrap;">
-                <span class="badge" style="background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2);">
+                <span class="badge" style="${badgeStyle}">
+                    <i data-lucide="${isIncome ? 'arrow-down-left' : 'tag'}" style="width: 12px; height: 12px;"></i>
                     ${exp.category}
                 </span>
             </td>
             <td style="padding: 1rem; font-weight: 500; color: var(--text-primary);">
                 ${exp.description}
             </td>
-            <td style="padding: 1rem; text-align: right; font-weight: 700; color: #ffffff; white-space: nowrap;">
-                ${formatCurrency(exp.amount)}
+            <td style="padding: 1rem; text-align: right; font-weight: 700; color: ${amountColor}; white-space: nowrap;">
+                ${amountDisplay}
             </td>
             <td style="padding: 1rem; text-align: right; white-space: nowrap;">
                 <div style="display: inline-flex; gap: 0.4rem; justify-content: flex-end;">
@@ -43,7 +52,8 @@ export function renderExpenseTable(containerEl, expenses, onEdit) {
                 </div>
             </td>
         </tr>
-    `).join("");
+    `;
+    }).join("");
 
     containerEl.innerHTML = `
         <div style="overflow-x: auto;">

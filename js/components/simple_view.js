@@ -56,6 +56,10 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
                     <span>Catat Cepat (Instant Log)</span>
                 </div>
                 <form id="simpleQuickAddForm" style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+                    <select id="quickType" class="form-select" style="width: 110px; flex-shrink: 0;">
+                        <option value="expense">Keluar</option>
+                        <option value="income">Masuk</option>
+                    </select>
                     <div style="position: relative; flex: 1; min-width: 130px;">
                         <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; font-weight: 700;">Rp</span>
                         <input type="number" step="0.01" id="quickAmount" placeholder="Nominal" required class="form-input" style="padding-left: 2.25rem; font-weight: 700;">
@@ -68,6 +72,7 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
                         <option value="Tagihan & Utilitas">Tagihan</option>
                         <option value="Hiburan & Hobi">Hiburan</option>
                         <option value="Kesehatan">Kesehatan</option>
+                        <option value="Investasi & Tabungan">Investasi</option>
                         <option value="Lainnya">Lainnya</option>
                     </select>
                     <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem;">
@@ -86,15 +91,23 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
 
                 ${recentExpenses.length === 0 ? `
                     <div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.85rem;">
-                        Belum ada catatan pengeluaran.
+                        Belum ada catatan transaksi.
                     </div>
                 ` : `
                     <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        ${recentExpenses.map(exp => `
+                        ${recentExpenses.map(exp => {
+                            const isIncome = exp.type === "income";
+                            const iconName = isIncome ? "arrow-down-left" : "tag";
+                            const iconBg = isIncome ? "rgba(16, 185, 129, 0.12)" : "rgba(59, 130, 246, 0.1)";
+                            const iconColor = isIncome ? "#34d399" : "#60a5fa";
+                            const amountText = (isIncome ? "+ " : "- ") + formatCurrency(exp.amount);
+                            const amountColor = isIncome ? "#34d399" : "#ffffff";
+
+                            return `
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--bg-surface); border-radius: var(--radius-md); border: 1.5px solid var(--border-card); transition: var(--transition-smooth);" onmouseover="this.style.borderColor='var(--border-card-hover)'" onmouseout="this.style.borderColor='var(--border-card)'">
                                 <div style="display: flex; align-items: center; gap: 0.75rem; overflow: hidden;">
-                                    <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(59, 130, 246, 0.1); color: #60a5fa; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                        <i data-lucide="tag" style="width: 14px; height: 14px;"></i>
+                                    <div style="width: 32px; height: 32px; border-radius: 8px; background: ${iconBg}; color: ${iconColor}; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        <i data-lucide="${iconName}" style="width: 14px; height: 14px;"></i>
                                     </div>
                                     <div style="overflow: hidden;">
                                         <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${exp.description}</div>
@@ -102,34 +115,38 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
                                     </div>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;">
-                                    <div style="font-size: 0.95rem; font-weight: 700; color: #ffffff;">${formatCurrency(exp.amount)}</div>
+                                    <div style="font-size: 0.95rem; font-weight: 700; color: ${amountColor};">${amountText}</div>
                                     <button class="btn btn-ghost btn-simple-del" data-id="${exp.id}" style="padding: 0.25rem 0.5rem; color: var(--text-muted);" title="Hapus">
                                         <i data-lucide="x" style="width: 14px; height: 14px;"></i>
                                     </button>
                                 </div>
                             </div>
-                        `).join("")}
+                        `;
+                        }).join("")}
                     </div>
                 `}
             </div>
-
         </div>
     `;
 
     // Bind Quick Add
     document.getElementById("simpleQuickAddForm")?.addEventListener("submit", (e) => {
         e.preventDefault();
+        const type = document.getElementById("quickType").value;
         const amt = document.getElementById("quickAmount").value;
         const desc = document.getElementById("quickDesc").value;
         const cat = document.getElementById("quickCategory").value;
         if (!amt || !desc) return;
 
         addExpense({
+            type,
             amount: amt,
             description: desc,
             category: cat,
             expenseDate: new Date().toISOString().split("T")[0]
         });
+        document.getElementById("quickAmount").value = "";
+        document.getElementById("quickDesc").value = "";
     });
 
     // Bind Deletes
