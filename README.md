@@ -1,100 +1,75 @@
-# MyBudget - Enterprise Daily Expense & Budget Telemetry Platform
+# MyBudget - Client-Side Financial Telemetry & Expense Analytics
 
-> Production-grade personal finance tracking, budget telemetry, and expense analytics built on Laravel 12 with Semantic Atomic Architecture.
+> Production-grade, zero-runtime personal finance telemetry, periodic budget controller, and expense analytics built with pure HTML5, CSS3, and Modular ESM JavaScript.
 
 ---
 
 ## Architecture Overview
 
-MyBudget is architected using **Semantic Atomic Architecture** and **Single Responsibility Files (SRF)**, avoiding monolithic god-controllers:
+MyBudget has been completely refactored from bloated server stacks into a **Semantic Atomic Architecture** with **Zero Server Dependencies**:
 
-- **Domain-Sliced Layer**:
-  - `App\Domain\Expense`: Atomic actions (`CreateExpenseAction`, `UpdateExpenseAction`, `DeleteExpenseAction`, `GetExpenseListAction`) and co-located DTOs (`ExpensePayloadDto`, `ExpenseFilterDto`).
-  - `App\Domain\Budget`: Centralized calculation action (`CalculateBudgetUsageAction`) preventing logic duplication, accompanied by CRUD actions and DTOs.
-  - `App\Domain\Analytics`: Dashboard aggregation action (`GetDashboardAnalyticsAction`) powering Chart.js telemetry.
-- **Form Request Isolation**:
-  - Dedicated validation contracts (`StoreExpenseRequest`, `UpdateExpenseRequest`, `StoreBudgetRequest`, `UpdateBudgetRequest`).
-- **UI/UX Benchmark**:
-  - Linear and Raycast dark theme (`#090a0d`, `#111318`), responsive grid, sub-pixel typography, Lucide SVG icons, zero raw emojis.
-- **Container Trifecta**:
-  - Dockerized PHP 8.2-FPM, Nginx reverse proxy, and MariaDB container services with healthchecks.
+- **Layer Decomposition**:
+  - `css/`: Split into atomic stylesheets (`theme.css` for Linear dark tokens, `layout.css` for grid & navigation, `components.css` for cards, tables, badges, modals, and micro-interactions).
+  - `js/store/`: `storage.js` reactive LocalStorage engine with state subscriptions, auto-backup export/import, and Node.js headless memory fallback.
+  - `js/domain/`: Pure business logic (`expense.js`, `budget.js`, `analytics.js`) strictly decoupled from UI rendering.
+  - `js/components/`: Atomic UI component renderers (`metrics.js`, `charts.js`, `modal.js`, `expense_view.js`, `budget_view.js`) adhering to the ~150-line soft cap.
+  - `js/app.js`: Clean single-responsibility application bootstrap orchestrator.
+- **Craftsmanship & UX Standard**:
+  - Linear/Raycast neutral dark palette (`#090a0d`, `#111318`, `#171a23`).
+  - Professional Lucide SVG icons, sub-pixel typography tracking, interactive micro-states.
+  - Zero raw emojis, zero em dashes.
+- **Offline PWA Capabilities**:
+  - Pre-caching Service Worker (`sw.js`) and Web Application Manifest (`manifest.json`) for zero-latency standalone execution.
 
 ---
 
-## Core Features
+## Core Capabilities
 
-- **Full Lifecycle Expense Management**: Record, view, filter, edit, and delete transactions with full pagination.
-- **Dynamic Search & Filtering**: Filter by category, custom date range, and keyword instant lookup.
-- **Financial Telemetry Dashboard**:
-  - Total historical spending, current month aggregate, and daily spending counters.
-  - Category breakdown with donut distribution chart.
+- **Transaction Lifecycle (Full CRUD)**:
+  - Add, edit, delete, and inspect transactions with automatic currency formatting (`Rp`).
+- **Dynamic Instant Filtering**:
+  - Filter transactions dynamically by category, keyword search, and custom date range with zero page reload.
+- **Telemetry Visualizer (Chart.js)**:
   - 14-day spending trajectory line chart.
-- **Periodic Budget Tracking**:
-  - Daily, weekly, monthly, and yearly budget envelope controls.
-  - Automated quota consumption tracking with health status flags (`Safe`, `Warning`, `Over Budget`).
+  - Donut chart category distribution breakdown.
+- **Periodic Budget Controls**:
+  - Set daily, weekly, monthly, or yearly budget envelopes.
+  - Real-time percentage consumption tracking and health status flags (`Aman`, `Waspada`, `Over Budget`).
+- **Data Sovereignty & Portability**:
+  - One-click JSON backup export and import functionality.
 
 ---
 
-## Single-Enter Shell Orchestration
+## Single-Enter Deployment & Execution
 
-Initialize and start the entire production environment with a single command:
+Run with one enter using the shell bundle:
 
 ```bash
-# Initial complete deployment (environment setup, docker build, migrations, cache warmup)
+# Production deployment via static Nginx Docker container or local HTTP server
 bash deploy.sh
 
 # Zero-downtime redeployment
 bash redeploy.sh
 
-# Automated test runner
+# Automated test runner (Node.js native test runner)
 bash runtest.sh
 ```
 
----
-
-## Manual Installation & Local Development
-
-1. **Clone repository**:
-   ```bash
-   git clone -b devv https://github.com/mwdhrmaaa/mybudget.git
-   cd mybudget
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   composer install --optimize-autoloader
-   npm install && npm run build
-   ```
-
-3. **Configure environment**:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-
-4. **Database migration**:
-   ```bash
-   php artisan migrate
-   ```
-
-5. **Start server**:
-   ```bash
-   php artisan serve
-   ```
+Alternatively, open `index.html` directly in any modern browser without any installation required.
 
 ---
 
 ## Automated Test Coverage
 
-Execute the complete feature test suite:
+Execute the headless domain logic test suite:
 
 ```bash
-php artisan test
+node --test tests/**/*.test.js
 ```
 
-Test suites cover:
-- `ExpenseDomainTest`: Dashboard rendering, full CRUD lifecycle, category filtering.
-- `BudgetDomainTest`: Budget rendering, dynamic usage calculation, envelope limits.
+Test suites verify:
+- Budget period date resolution and multi-tier usage health calculations.
+- Dashboard analytics aggregation, category percentages, and daily trajectories.
 
 ---
 
