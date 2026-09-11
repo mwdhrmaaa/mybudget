@@ -2,6 +2,8 @@ import { formatCurrency } from "./metrics.js";
 import { deleteExpense } from "../domain/expense.js";
 import { toast } from "./toast.js";
 
+let sortConfig = { field: "expenseDate", dir: "desc" };
+
 export function renderExpenseTable(containerEl, expenses, onEdit) {
     if (!containerEl) return;
 
@@ -16,7 +18,29 @@ export function renderExpenseTable(containerEl, expenses, onEdit) {
         return;
     }
 
-    const rows = expenses.map(exp => {
+    const sortedExpenses = [...expenses].sort((a, b) => {
+        let valA = a[sortConfig.field];
+        let valB = b[sortConfig.field];
+        if (sortConfig.field === "amount") {
+            valA = Number(valA) || 0;
+            valB = Number(valB) || 0;
+        } else if (typeof valA === "string") {
+            valA = valA.toLowerCase();
+            valB = (valB || "").toLowerCase();
+        }
+        if (valA < valB) return sortConfig.dir === "asc" ? -1 : 1;
+        if (valA > valB) return sortConfig.dir === "asc" ? 1 : -1;
+        return 0;
+    });
+
+    const renderSortIcon = (field) => {
+        if (sortConfig.field !== field) return "";
+        return sortConfig.dir === "asc"
+            ? `<i data-lucide="chevron-up" class="sort-icon"></i>`
+            : `<i data-lucide="chevron-down" class="sort-icon"></i>`;
+    };
+
+    const rows = sortedExpenses.map(exp => {
         const isIncome = exp.type === "income";
         const amountDisplay = (isIncome ? "+ " : "- ") + formatCurrency(exp.amount);
         const amountColor = isIncome ? "#34d399" : "#f4f4f6";
@@ -60,10 +84,10 @@ export function renderExpenseTable(containerEl, expenses, onEdit) {
             <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
                 <thead>
                     <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        <th style="padding: 0.75rem 1rem;">Tanggal</th>
-                        <th style="padding: 0.75rem 1rem;">Kategori</th>
-                        <th style="padding: 0.75rem 1rem;">Keterangan</th>
-                        <th style="padding: 0.75rem 1rem; text-align: right;">Nominal</th>
+                        <th class="sortable-th" data-sort="expenseDate" style="padding: 0.75rem 1rem;">Tanggal ${renderSortIcon("expenseDate")}</th>
+                        <th class="sortable-th" data-sort="category" style="padding: 0.75rem 1rem;">Kategori ${renderSortIcon("category")}</th>
+                        <th class="sortable-th" data-sort="description" style="padding: 0.75rem 1rem;">Keterangan ${renderSortIcon("description")}</th>
+                        <th class="sortable-th" data-sort="amount" style="padding: 0.75rem 1rem; text-align: right;">Nominal ${renderSortIcon("amount")}</th>
                         <th style="padding: 0.75rem 1rem; text-align: right;">Aksi</th>
                     </tr>
                 </thead>
@@ -75,6 +99,19 @@ export function renderExpenseTable(containerEl, expenses, onEdit) {
     `;
 
     // Event listeners
+    containerEl.querySelectorAll(".sortable-th").forEach(th => {
+        th.addEventListener("click", () => {
+            const field = th.getAttribute("data-sort");
+            if (sortConfig.field === field) {
+                sortConfig.dir = sortConfig.dir === "asc" ? "desc" : "asc";
+            } else {
+                sortConfig.field = field;
+                sortConfig.dir = field === "amount" ? "desc" : "asc";
+            }
+            renderExpenseTable(containerEl, expenses, onEdit);
+        });
+    });
+
     containerEl.querySelectorAll(".btn-del-exp").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = btn.getAttribute("data-id");
