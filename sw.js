@@ -1,4 +1,4 @@
-const CACHE_NAME = "mybudget-static-v2";
+const CACHE_NAME = "mybudget-static-v3";
 const ASSETS = [
     "./",
     "./index.html",
@@ -15,7 +15,8 @@ const ASSETS = [
     "./js/components/charts.js",
     "./js/components/modal.js",
     "./js/components/expense_view.js",
-    "./js/components/budget_view.js"
+    "./js/components/budget_view.js",
+    "./js/components/simple_view.js"
 ];
 
 self.addEventListener("install", (e) => {
