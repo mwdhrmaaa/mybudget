@@ -1,5 +1,6 @@
 import { formatCurrency } from "./metrics.js";
 import { deleteExpense } from "../domain/expense.js";
+import { toast } from "./toast.js";
 
 export function renderExpenseTable(containerEl, expenses, onEdit) {
     if (!containerEl) return;
@@ -67,7 +68,10 @@ export function renderExpenseTable(containerEl, expenses, onEdit) {
     containerEl.querySelectorAll(".btn-del-exp").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = btn.getAttribute("data-id");
-            deleteExpense(id);
+            const deleted = deleteExpense(id);
+            if (deleted) {
+                toast.showDeleteToast(deleted);
+            }
         });
     });
 

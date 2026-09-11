@@ -1,5 +1,6 @@
 import { formatCurrency } from "./metrics.js";
 import { addExpense, deleteExpense } from "../domain/expense.js";
+import { toast } from "./toast.js";
 
 export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdit) {
     if (!containerEl) return;
@@ -135,7 +136,10 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
     containerEl.querySelectorAll(".btn-simple-del").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = btn.getAttribute("data-id");
-            deleteExpense(id);
+            const deleted = deleteExpense(id);
+            if (deleted) {
+                toast.showDeleteToast(deleted);
+            }
         });
     });
 
