@@ -67,9 +67,7 @@ export function renderExpenseTable(containerEl, expenses, onEdit) {
     containerEl.querySelectorAll(".btn-del-exp").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = btn.getAttribute("data-id");
-            if (confirm("Hapus catatan pengeluaran ini secara permanen?")) {
-                deleteExpense(id);
-            }
+            deleteExpense(id);
         });
     });
 

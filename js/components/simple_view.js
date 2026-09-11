@@ -135,9 +135,7 @@ export function renderSimpleView(containerEl, expenses = [], budgets = [], onEdi
     containerEl.querySelectorAll(".btn-simple-del").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = btn.getAttribute("data-id");
-            if (confirm("Hapus catatan ini?")) {
-                deleteExpense(id);
-            }
+            deleteExpense(id);
         });
     });
 
