@@ -43,35 +43,35 @@ export function renderExpenseTable(containerEl, expenses, onEdit) {
     const rows = sortedExpenses.map(exp => {
         const isIncome = exp.type === "income";
         const amountDisplay = (isIncome ? "+ " : "- ") + formatCurrency(exp.amount);
-        const amountColor = isIncome ? "#34d399" : "#f4f4f6";
+        const amountColor = isIncome ? "#34d399" : "#f8f9fa";
         const badgeStyle = isIncome
-            ? "background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1.5px solid rgba(16, 185, 129, 0.35); border-radius: 9999px;"
-            : "background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1.5px solid rgba(59, 130, 246, 0.35); border-radius: 9999px;";
+            ? "background: rgba(16, 185, 129, 0.08); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-sm);"
+            : "background: rgba(59, 130, 246, 0.08); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); border-radius: var(--radius-sm);";
 
         return `
-        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.04); transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(255, 255, 255, 0.02)'" onmouseout="this.style.background='transparent'">
-            <td style="padding: 1rem; white-space: nowrap; color: var(--text-secondary);">
+        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.03); transition: var(--transition-smooth);" onmouseover="this.style.background='rgba(255, 255, 255, 0.02)'" onmouseout="this.style.background='transparent'">
+            <td style="padding: 0.65rem 0.85rem; white-space: nowrap; color: var(--text-secondary); font-size: 0.8125rem;">
                 ${new Date(exp.expenseDate).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
             </td>
-            <td style="padding: 1rem; white-space: nowrap;">
+            <td style="padding: 0.65rem 0.85rem; white-space: nowrap;">
                 <span class="badge" style="${badgeStyle}">
-                    <i data-lucide="${isIncome ? 'arrow-down-left' : 'tag'}" style="width: 12px; height: 12px;"></i>
+                    <i data-lucide="${isIncome ? 'arrow-down-left' : 'tag'}" style="width: 11px; height: 11px;"></i>
                     ${exp.category}
                 </span>
             </td>
-            <td style="padding: 1rem; font-weight: 500; color: var(--text-primary);">
+            <td style="padding: 0.65rem 0.85rem; font-weight: 500; color: var(--text-primary); font-size: 0.8125rem;">
                 ${exp.description}
             </td>
-            <td style="padding: 1rem; text-align: right; font-weight: 700; color: ${amountColor}; white-space: nowrap;">
+            <td style="padding: 0.65rem 0.85rem; text-align: right; font-weight: 600; color: ${amountColor}; white-space: nowrap; font-size: 0.8125rem;">
                 ${amountDisplay}
             </td>
-            <td style="padding: 1rem; text-align: right; white-space: nowrap;">
-                <div style="display: inline-flex; gap: 0.4rem; justify-content: flex-end;">
-                    <button class="btn btn-ghost btn-edit-exp" data-id="${exp.id}" style="padding: 0.35rem 0.6rem;" title="Edit Transaksi">
-                        <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+            <td style="padding: 0.65rem 0.85rem; text-align: right; white-space: nowrap;">
+                <div style="display: inline-flex; gap: 0.25rem; justify-content: flex-end;">
+                    <button class="btn btn-ghost btn-edit-exp" data-id="${exp.id}" style="padding: 0.25rem 0.45rem;" title="Edit Transaksi">
+                        <i data-lucide="edit-3" style="width: 13px; height: 13px;"></i>
                     </button>
-                    <button class="btn btn-danger-ghost btn-del-exp" data-id="${exp.id}" style="padding: 0.35rem 0.6rem;" title="Hapus Transaksi">
-                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                    <button class="btn btn-danger-ghost btn-del-exp" data-id="${exp.id}" style="padding: 0.25rem 0.45rem;" title="Hapus Transaksi">
+                        <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
                     </button>
                 </div>
             </td>
@@ -81,14 +81,14 @@ export function renderExpenseTable(containerEl, expenses, onEdit) {
 
     containerEl.innerHTML = `
         <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.8125rem;">
                 <thead>
-                    <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        <th class="sortable-th" data-sort="expenseDate" style="padding: 0.75rem 1rem;">Tanggal ${renderSortIcon("expenseDate")}</th>
-                        <th class="sortable-th" data-sort="category" style="padding: 0.75rem 1rem;">Kategori ${renderSortIcon("category")}</th>
-                        <th class="sortable-th" data-sort="description" style="padding: 0.75rem 1rem;">Keterangan ${renderSortIcon("description")}</th>
-                        <th class="sortable-th" data-sort="amount" style="padding: 0.75rem 1rem; text-align: right;">Nominal ${renderSortIcon("amount")}</th>
-                        <th style="padding: 0.75rem 1rem; text-align: right;">Aksi</th>
+                    <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <th class="sortable-th" data-sort="expenseDate" style="padding: 0.6rem 0.85rem;">Tanggal ${renderSortIcon("expenseDate")}</th>
+                        <th class="sortable-th" data-sort="category" style="padding: 0.6rem 0.85rem;">Kategori ${renderSortIcon("category")}</th>
+                        <th class="sortable-th" data-sort="description" style="padding: 0.6rem 0.85rem;">Keterangan ${renderSortIcon("description")}</th>
+                        <th class="sortable-th" data-sort="amount" style="padding: 0.6rem 0.85rem; text-align: right;">Nominal ${renderSortIcon("amount")}</th>
+                        <th style="padding: 0.6rem 0.85rem; text-align: right;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
