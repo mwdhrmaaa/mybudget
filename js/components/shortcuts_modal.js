@@ -23,6 +23,10 @@ export function openShortcutsModal() {
                     <kbd style="padding: 0.2rem 0.5rem; background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; color: var(--accent-brand);">S</kbd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.85rem; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+                    <span style="font-size: 0.85rem; color: var(--text-primary);">Buka/Tutup Slide bar (Sidebar)</span>
+                    <kbd style="padding: 0.2rem 0.5rem; background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; color: var(--accent-brand);">[ / B</kbd>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.85rem; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
                     <span style="font-size: 0.85rem; color: var(--text-primary);">Buka Panduan Pintasan</span>
                     <kbd style="padding: 0.2rem 0.5rem; background: var(--bg-surface); border: 1px solid var(--border-card); border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; color: var(--accent-brand);">?</kbd>
                 </div>

@@ -8,7 +8,8 @@ export function initKeyboardShortcuts({
     onToggleMode,
     onFocusSearch,
     onCloseModal,
-    onShowHelp
+    onShowHelp,
+    onToggleSidebar
 } = {}) {
     if (typeof window === "undefined") return;
 
@@ -34,6 +35,9 @@ export function initKeyboardShortcuts({
         } else if (key === "s") {
             e.preventDefault();
             if (onToggleMode) onToggleMode();
+        } else if (key === "[" || key === "b") {
+            e.preventDefault();
+            if (onToggleSidebar) onToggleSidebar();
         } else if (e.key === "?" || (e.shiftKey && e.key === "/")) {
             e.preventDefault();
             if (onShowHelp) onShowHelp();
