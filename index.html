@@ -15,6 +15,7 @@
     <!-- CSS Modules -->
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/toast.css">
 
@@ -23,10 +24,80 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <div style="display: flex; align-items: center; gap: 0.85rem;">
-                <a href="#" class="brand-logo" id="brandLogo">
+    <div class="app-layout">
+        <!-- Left Slide Bar / Sidebar -->
+        <aside class="app-sidebar" id="appSidebar">
+            <div class="sidebar-header">
+                <a href="#" class="brand-logo" style="gap: 0.65rem;">
+                    <div class="brand-icon" style="width: 32px; height: 32px; border-radius: 8px;">
+                        <i data-lucide="wallet-cards" style="width: 17px; height: 17px;"></i>
+                    </div>
+                    <span style="font-size: 1.1rem; font-weight: 800;">MyBudget</span>
+                </a>
+                <button id="sidebarCloseBtn" class="btn-sidebar-close" title="Tutup Menu">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-body">
+                <!-- Navigation Section -->
+                <div class="sidebar-nav-group">
+                    <div class="sidebar-section-label">NAVIGASI</div>
+                    <button class="sidebar-nav-btn active" id="sidebarTabDashboardBtn" data-tab="dashboard">
+                        <i data-lucide="layout-dashboard" style="width: 17px; height: 17px;"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="sidebar-nav-btn" id="sidebarTabBudgetsBtn" data-tab="budgets">
+                        <i data-lucide="pie-chart" style="width: 17px; height: 17px;"></i>
+                        <span>Rencana Anggaran</span>
+                    </button>
+                </div>
+
+                <!-- Mode Tampilan Section -->
+                <div class="sidebar-nav-group">
+                    <div class="sidebar-section-label">MODE TAMPILAN</div>
+                    <button class="sidebar-mode-card" id="sidebarModeToggleBtn" title="Ganti Mode Tampilan">
+                        <div style="display: flex; align-items: center; gap: 0.65rem;">
+                            <div class="mode-card-icon" id="sidebarModeIconWrapper">
+                                <i data-lucide="minimize-2" id="sidebarModeIcon" style="width: 15px; height: 15px;"></i>
+                            </div>
+                            <div style="text-align: left;">
+                                <div style="font-size: 0.825rem; font-weight: 700; color: var(--text-primary);" id="sidebarModeTitle">Complex Mode</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);" id="sidebarModeDesc">Telemetri arus kas & grafik</div>
+                            </div>
+                        </div>
+                        <span class="mode-badge" id="sidebarModeBadge">Complex</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-primary" id="sidebarAddExpenseBtn" style="width: 100%; justify-content: center; padding: 0.55rem 0.85rem; font-size: 0.85rem;">
+                    <i data-lucide="plus" style="width: 15px; height: 15px;"></i>
+                    <span>Catat Transaksi</span>
+                </button>
+                <button class="btn btn-ghost" id="sidebarShortcutsBtn" style="width: 100%; justify-content: space-between; padding: 0.45rem 0.75rem; font-size: 0.75rem; color: var(--text-muted);">
+                    <span style="display: flex; align-items: center; gap: 0.4rem;">
+                        <i data-lucide="keyboard" style="width: 13px; height: 13px;"></i>
+                        <span>Pintasan</span>
+                    </span>
+                    <kbd style="padding: 0.15rem 0.4rem; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 4px; font-size: 0.7rem;">?</kbd>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Sidebar backdrop overlay for mobile/slide -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <!-- Main Content Area -->
+        <div class="app-main">
+            <header class="site-header">
+                <div class="container nav-wrapper">
+                    <div style="display: flex; align-items: center; gap: 0.85rem;">
+                        <button id="sidebarToggleBtn" class="btn btn-ghost" style="padding: 0.45rem; border-radius: var(--radius-md);" title="Buka/Tutup Slide bar">
+                            <i data-lucide="panel-left" style="width: 18px; height: 18px;"></i>
+                        </button>
+                        <a href="#" class="brand-logo" id="brandLogo">
                     <div class="brand-icon">
                         <i data-lucide="wallet-cards" style="width: 18px; height: 18px;"></i>
                     </div>
@@ -197,6 +268,8 @@
             </div>
         </div>
     </footer>
+    </div> <!-- /.app-main -->
+    </div> <!-- /.app-layout -->
 
     <!-- Application Bootstrap Module -->
     <script type="module" src="js/app.js"></script>

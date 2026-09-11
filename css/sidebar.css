@@ -1,0 +1,206 @@
+/* ===================================================================
+   MyBudget - Collapsible & Responsive Left Sidebar / Slide Bar
+   =================================================================== */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.app-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--bg-surface);
+    border-right: 1.5px solid var(--border-card);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+    z-index: 60;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.app-sidebar.collapsed {
+    margin-left: -260px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 1.25rem;
+}
+
+.btn-sidebar-close {
+    padding: 0.35rem;
+    display: none;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-sidebar-close:hover {
+    color: var(--text-primary);
+}
+
+.sidebar-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+.sidebar-nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.sidebar-section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0 0.5rem 0.25rem;
+}
+
+.sidebar-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: var(--transition-smooth);
+}
+
+.sidebar-nav-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--border-subtle);
+}
+
+.sidebar-nav-btn.active {
+    color: #ffffff;
+    background: var(--bg-surface-elevated);
+    border-color: var(--border-highlight);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.sidebar-nav-btn.active i {
+    color: var(--accent-brand);
+}
+
+.sidebar-mode-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.75rem 0.85rem;
+    background: var(--bg-surface-elevated);
+    border: 1.5px solid var(--border-card);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-align: left;
+    transition: var(--transition-smooth);
+}
+
+.sidebar-mode-card:hover {
+    border-color: var(--border-card-hover);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.mode-card-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-sm);
+    background: rgba(59, 130, 246, 0.12);
+    color: var(--accent-brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.mode-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 9999px;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 80;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-smooth);
+}
+
+.sidebar-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+@media (max-width: 860px) {
+    .app-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 280px;
+        z-index: 100;
+        transform: translateX(-100%);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .app-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .app-sidebar.collapsed {
+        margin-left: 0;
+    }
+
+    .btn-sidebar-close {
+        display: flex;
+    }
+}
