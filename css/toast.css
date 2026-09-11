@@ -29,7 +29,7 @@
     background: rgba(23, 26, 35, 0.95);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--border-highlight);
+    border: 1.5px solid var(--border-card-hover);
     border-radius: var(--radius-md);
     box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
     padding: 0.85rem 1.15rem;

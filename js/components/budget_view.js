@@ -49,12 +49,12 @@ export function renderBudgetCards(containerEl, enrichedBudgets, onEdit) {
                             <span>Terpakai: <strong>${formatCurrency(budget.usage)}</strong></span>
                             <span>Pagu: <strong>${formatCurrency(budget.amount)}</strong></span>
                         </div>
-                        <div style="width: 100%; height: 8px; background: rgba(255, 255, 255, 0.06); border-radius: 0; overflow: hidden;">
-                            <div style="height: 100%; width: ${Math.min(100, budget.percentUsed)}%; background: ${barColor}; border-radius: 0; transition: width 0.4s ease;"></div>
+                        <div style="width: 100%; height: 8px; background: rgba(255, 255, 255, 0.06); border-radius: 9999px; overflow: hidden;">
+                            <div style="height: 100%; width: ${Math.min(100, budget.percentUsed)}%; background: ${barColor}; border-radius: 9999px; transition: width 0.4s ease;"></div>
                         </div>
                     </div>
 
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--bg-surface); border-radius: var(--radius-md); font-size: 0.85rem; margin-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--bg-surface); border-radius: var(--radius-md); border: 1.5px solid var(--border-card); font-size: 0.85rem; margin-top: 1rem;">
                         <span style="color: var(--text-secondary);">Sisa Kuota:</span>
                         <span style="font-weight: 700; color: ${budget.remainingBalance < 0 ? '#f87171' : '#34d399'};">
                             ${formatCurrency(budget.remainingBalance)}
