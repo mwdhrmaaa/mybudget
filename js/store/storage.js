@@ -84,12 +84,30 @@ class StorageStore {
     }
 
     importData(jsonString) {
-        const parsed = JSON.parse(jsonString);
-        if (Array.isArray(parsed.expenses)) {
-            this.saveExpenses(parsed.expenses);
-        }
-        if (Array.isArray(parsed.budgets)) {
-            this.saveBudgets(parsed.budgets);
+        try {
+            const parsed = typeof jsonString === "string" ? JSON.parse(jsonString) : jsonString;
+            if (!parsed || typeof parsed !== "object") {
+                return { success: false, error: "Format berkas JSON tidak valid." };
+            }
+            if (!Array.isArray(parsed.expenses) && !Array.isArray(parsed.budgets)) {
+                return { success: false, error: "Berkas tidak memuat data transaksi atau anggaran yang valid." };
+            }
+
+            let expCount = 0;
+            let budCount = 0;
+
+            if (Array.isArray(parsed.expenses)) {
+                this.saveExpenses(parsed.expenses);
+                expCount = parsed.expenses.length;
+            }
+            if (Array.isArray(parsed.budgets)) {
+                this.saveBudgets(parsed.budgets);
+                budCount = parsed.budgets.length;
+            }
+
+            return { success: true, countExpenses: expCount, countBudgets: budCount };
+        } catch (err) {
+            return { success: false, error: err.message || "Gagal memproses berkas JSON." };
         }
     }
 
