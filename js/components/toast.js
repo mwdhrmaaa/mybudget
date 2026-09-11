@@ -1,4 +1,5 @@
 import { restoreExpense } from "../domain/expense.js";
+import { restoreBudget } from "../domain/budget.js";
 
 /**
  * Floating Undo Toast Manager with Multi-Item Stacking
@@ -24,11 +25,10 @@ class ToastManager {
         this.container = container;
     }
 
-    showDeleteToast(expense, duration = 5000) {
-        if (typeof document === "undefined" || !expense) return;
+    _spawnUndoToast({ badge, desc, amount, onUndo, duration = 5000 }) {
+        if (typeof document === "undefined") return;
         this.init();
 
-        // If stack exceeds maximum visible, smoothly dismiss the oldest
         if (this.activeToasts.size >= this.maxVisible) {
             const oldestId = this.activeToasts.keys().next().value;
             this.dismissToast(oldestId);
@@ -40,16 +40,14 @@ class ToastManager {
             style: "currency",
             currency: "IDR",
             maximumFractionDigits: 0
-        }).format(expense.amount || 0);
-
-        const desc = expense.description || "Catatan transaksi";
+        }).format(amount || 0);
 
         const card = document.createElement("div");
         card.className = "toast-card";
         card.id = toastId;
         card.innerHTML = `
             <div class="toast-body">
-                <span class="toast-badge">Catatan Dihapus</span>
+                <span class="toast-badge">${badge}</span>
                 <span class="toast-meta" title="${desc}">
                     ${desc} &bull; <span class="toast-amount">${formattedAmount}</span>
                 </span>
@@ -68,16 +66,14 @@ class ToastManager {
 
         this.container.appendChild(card);
 
-        // Bind Undo Action
         const undoBtn = card.querySelector(".btn-toast-undo");
         if (undoBtn) {
             undoBtn.addEventListener("click", () => {
-                restoreExpense(expense);
+                if (onUndo) onUndo();
                 this.dismissToast(toastId);
             });
         }
 
-        // Bind Close Action
         const closeBtn = card.querySelector(".btn-toast-close");
         if (closeBtn) {
             closeBtn.addEventListener("click", () => {
@@ -85,19 +81,39 @@ class ToastManager {
             });
         }
 
-        // Set 5-second auto-dismiss for this specific toast
         const timeoutId = setTimeout(() => {
             this.dismissToast(toastId);
         }, duration);
 
-        this.activeToasts.set(toastId, { card, timeoutId, expense });
+        this.activeToasts.set(toastId, { card, timeoutId });
 
-        // Trigger entrance animation
         requestAnimationFrame(() => {
             card.classList.add("show");
         });
 
         if (window.lucide) window.lucide.createIcons();
+    }
+
+    showDeleteToast(expense, duration = 5000) {
+        if (!expense) return;
+        this._spawnUndoToast({
+            badge: "Catatan Dihapus",
+            desc: expense.description || "Catatan transaksi",
+            amount: expense.amount || 0,
+            onUndo: () => restoreExpense(expense),
+            duration
+        });
+    }
+
+    showBudgetDeleteToast(budget, duration = 5000) {
+        if (!budget) return;
+        this._spawnUndoToast({
+            badge: "Anggaran Dihapus",
+            desc: budget.description || `Anggaran ${budget.period}`,
+            amount: budget.amount || 0,
+            onUndo: () => restoreBudget(budget),
+            duration
+        });
     }
 
     dismissToast(toastId) {
