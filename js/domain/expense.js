@@ -27,7 +27,7 @@ export function getFilteredExpenses(filters = {}) {
 export function addExpense(payload) {
     const list = store.getExpenses();
     const newExpense = {
-        id: "exp-" + Date.now(),
+        id: "exp-" + Date.now() + "-" + Math.random().toString(36).substring(2, 7),
         amount: Math.abs(parseFloat(payload.amount)),
         description: payload.description.trim(),
         category: payload.category.trim(),

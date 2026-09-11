@@ -42,3 +42,27 @@ test("restoreExpense restores deleted record back into store", () => {
     assert.equal(found.amount, 75000);
     assert.equal(found.description, "Undo Target Expense");
 });
+
+test("multiple rapid deletions and selective restore work independently", () => {
+    store.resetDefaults();
+    const item1 = addExpense({ amount: 10000, description: "Item 1", category: "Lainnya", expenseDate: "2026-09-11" });
+    const item2 = addExpense({ amount: 20000, description: "Item 2", category: "Lainnya", expenseDate: "2026-09-11" });
+    const item3 = addExpense({ amount: 30000, description: "Item 3", category: "Lainnya", expenseDate: "2026-09-11" });
+
+    // Rapid deletions
+    const del1 = deleteExpense(item1.id);
+    const del2 = deleteExpense(item2.id);
+    const del3 = deleteExpense(item3.id);
+
+    assert.equal(del1.id, item1.id);
+    assert.equal(del2.id, item2.id);
+    assert.equal(del3.id, item3.id);
+
+    // Restore only item 2
+    restoreExpense(del2);
+
+    const after = store.getExpenses();
+    assert.equal(after.some(e => e.id === item1.id), false);
+    assert.equal(after.some(e => e.id === item2.id), true);
+    assert.equal(after.some(e => e.id === item3.id), false);
+});
