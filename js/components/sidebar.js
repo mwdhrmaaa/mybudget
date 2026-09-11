@@ -18,12 +18,16 @@ export function initSidebar({ onTabChange, onModeToggle, onAddExpense, onShowHel
     const headerBrand = document.getElementById("headerBrandLogo");
 
     const updateBrandVisibility = () => {
+        if (!headerBrand) return;
+        if (headerBrand.style.display) {
+            headerBrand.style.display = "";
+        }
         if (isMobile()) {
             const isOpen = sidebar?.classList.contains("open");
-            if (headerBrand) headerBrand.style.display = isOpen ? "none" : "inline-flex";
+            headerBrand.classList.toggle("hidden-brand", isOpen);
         } else {
             const isCollapsed = sidebar?.classList.contains("collapsed");
-            if (headerBrand) headerBrand.style.display = isCollapsed ? "inline-flex" : "none";
+            headerBrand.classList.toggle("hidden-brand", !isCollapsed);
         }
     };
 

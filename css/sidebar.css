@@ -20,7 +20,9 @@
     flex-direction: column;
     padding: 1.25rem 1rem;
     z-index: 60;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), 
+                margin-left 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .app-sidebar.collapsed {
@@ -139,9 +141,61 @@
     color: #6ee7b7;
 }
 
+.header-brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    max-width: 220px;
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    transform-origin: left center;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                margin 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.header-brand-logo.hidden-brand {
+    max-width: 0 !important;
+    opacity: 0 !important;
+    transform: translateX(-14px) scale(0.92) !important;
+    pointer-events: none !important;
+    margin-right: -0.85rem !important;
+}
+
+.header-brand-logo .brand-icon,
+.sidebar-header .brand-logo .brand-icon {
+    flex-shrink: 0;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-brand-logo:hover .brand-icon,
+.sidebar-header .brand-logo:hover .brand-icon {
+    transform: scale(1.05);
+}
+
+#sidebarToggleBtn {
+    transition: background-color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+}
+
+#sidebarToggleBtn:active {
+    transform: scale(0.92);
+}
+
 @media (min-width: 861px) {
     .app-sidebar:not(.collapsed) ~ .app-main .header-brand-logo {
-        display: none !important;
+        max-width: 0;
+        opacity: 0;
+        transform: translateX(-14px) scale(0.92);
+        pointer-events: none;
+        margin-right: -0.85rem;
     }
 }
 
@@ -163,7 +217,7 @@
     z-index: 80;
     opacity: 0;
     visibility: hidden;
-    transition: var(--transition-smooth);
+    transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sidebar-backdrop.active {
@@ -203,6 +257,11 @@
     }
 
     .app-sidebar.open ~ .app-main .header-brand-logo {
-        display: none !important;
+        max-width: 0;
+        opacity: 0;
+        transform: translateX(-14px) scale(0.92);
+        pointer-events: none;
+        margin-right: -0.85rem;
     }
 }
+
