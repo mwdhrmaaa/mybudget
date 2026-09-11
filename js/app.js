@@ -2,7 +2,7 @@ import { store } from "./store/storage.js";
 import { getFilteredExpenses, addExpense, updateExpense } from "./domain/expense.js";
 import { calculateAllBudgets, addBudget, updateBudget } from "./domain/budget.js";
 import { calculateDashboardAnalytics } from "./domain/analytics.js";
-import { renderMetrics } from "./components/metrics.js";
+import { formatCurrency, renderMetrics } from "./components/metrics.js";
 import { updateCharts } from "./components/charts.js";
 import { renderExpenseTable } from "./components/expense_view.js";
 import { renderBudgetCards } from "./components/budget_view.js";
@@ -11,6 +11,7 @@ import { modal } from "./components/modal.js";
 import { toast } from "./components/toast.js";
 import { openExpenseModal } from "./components/expense_modal_form.js";
 import { openBudgetModal } from "./components/budget_modal_form.js";
+import { openShortcutsModal } from "./components/shortcuts_modal.js";
 import { setupDataTransfer } from "./actions/data_transfer.js";
 import { initKeyboardShortcuts } from "./controllers/shortcuts.js";
 
@@ -107,8 +108,24 @@ class App {
             onNewTransaction: () => this.openExpenseForm(),
             onToggleMode: () => this.toggleViewMode(),
             onFocusSearch: () => this.filterSearch?.focus(),
-            onCloseModal: () => modal.close()
+            onCloseModal: () => modal.close(),
+            onShowHelp: () => openShortcutsModal()
         });
+
+        const updateOnlineStatus = () => {
+            const dot = document.getElementById("statusDot");
+            const text = document.getElementById("statusText");
+            if (navigator.onLine) {
+                dot?.classList.remove("offline");
+                if (text) text.textContent = "Online";
+            } else {
+                dot?.classList.add("offline");
+                if (text) text.textContent = "Offline";
+            }
+        };
+        window.addEventListener("online", updateOnlineStatus);
+        window.addEventListener("offline", updateOnlineStatus);
+        updateOnlineStatus();
     }
 
     toggleViewMode() {
@@ -161,7 +178,8 @@ class App {
     renderExpenses() {
         const filtered = getFilteredExpenses(this.filters);
         if (this.filterCountLabel) {
-            this.filterCountLabel.textContent = `Menampilkan ${filtered.length} catatan transaksi`;
+            const totalNominal = filtered.reduce((sum, exp) => sum + (Number(exp.amount) || 0), 0);
+            this.filterCountLabel.innerHTML = `Menampilkan <strong>${filtered.length}</strong> transaksi &bull; Total: <strong>${formatCurrency(totalNominal)}</strong>`;
         }
         renderExpenseTable(this.expenseTableContainer, filtered, (exp) => this.openExpenseForm(exp));
     }
