@@ -2,127 +2,71 @@
 
 namespace App\Http\Controllers\Public\Finance;
 
+use App\Domain\Budget\Actions\CalculateBudgetUsageAction;
+use App\Domain\Budget\Actions\CreateBudgetAction;
+use App\Domain\Budget\Actions\DeleteBudgetAction;
+use App\Domain\Budget\Actions\UpdateBudgetAction;
+use App\Domain\Budget\DataTransferObjects\BudgetPayloadDto;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Budget\StoreBudgetRequest;
+use App\Http\Requests\Budget\UpdateBudgetRequest;
 use App\Models\Budget;
-use App\Models\Expense;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
-class BudgetController extends Controller
+final class BudgetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct(
+        private readonly CalculateBudgetUsageAction $calculateUsage,
+        private readonly CreateBudgetAction $createBudget,
+        private readonly UpdateBudgetAction $updateBudget,
+        private readonly DeleteBudgetAction $deleteBudget
+    ) {}
+
+    public function index(): View
     {
-        $budgets = Budget::orderBy('start_date', 'desc')->get();
-
-        // Calculate remaining balance for each budget
-        foreach ($budgets as $budget) {
-            $startDate = Carbon::parse($budget->start_date);
-            $endDate = $budget->end_date ? Carbon::parse($budget->end_date) : null;
-
-            if (!$endDate) {
-                // Determine end date based on period if not set
-                switch ($budget->period) {
-                    case 'daily':
-                        $endDate = $startDate->copy()->endOfDay();
-                        break;
-                    case 'weekly':
-                        $endDate = $startDate->copy()->endOfWeek();
-                        break;
-                    case 'monthly':
-                        $endDate = $startDate->copy()->endOfMonth();
-                        break;
-                    case 'yearly':
-                        $endDate = $startDate->copy()->endOfYear();
-                        break;
-                    default:
-                         $endDate = $startDate->copy()->addYears(100); // Indefinite?
-                }
-            }
-
-            $totalExpenses = Expense::whereBetween('expense_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-                ->sum('amount');
-
-            $budget->remaining_balance = $budget->amount - $totalExpenses;
-            $budget->total_expenses = $totalExpenses;
-        }
+        $rawBudgets = Budget::orderBy('start_date', 'desc')->get();
+        $budgets = $this->calculateUsage->execute($rawBudgets);
 
         return view('public.finance.budget.index', compact('budgets'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
         return view('public.finance.budget.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreBudgetRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'amount' => 'required|numeric|min:0',
-            'period' => 'required|in:daily,weekly,monthly,yearly',
-            'start_date' => 'required|date',
-            'description' => 'nullable|string|max:255',
-        ]);
+        $dto = BudgetPayloadDto::fromArray($request->validated());
+        $this->createBudget->execute($dto);
 
-        // Auto calculate end_date ideally, or leave null to be dynamic based on period start?
-        // Let's set end_date based on period for clarity in DB if desired, or handle dynamically.
-        // For now, let's keep end_date nullable in DB but maybe populate it? 
-        // Or better, logic in index handles "current period" check. 
-        // User asked for "options for time, from day to year".
-        
-        // Let's start simple.
-        Budget::create($validated);
-
-        return redirect()->route('public.finance.budget.index')->with('success', 'Budget created successfully.');
+        return redirect()
+            ->route('public.finance.budget.index')
+            ->with('success', 'Rencana anggaran berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Budget $budget)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Budget $budget)
+    public function edit(Budget $budget): View
     {
         return view('public.finance.budget.edit', compact('budget'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Budget $budget)
+    public function update(UpdateBudgetRequest $request, Budget $budget): RedirectResponse
     {
-         $validated = $request->validate([
-            'amount' => 'required|numeric|min:0',
-            'period' => 'required|in:daily,weekly,monthly,yearly',
-            'start_date' => 'required|date',
-            'description' => 'nullable|string|max:255',
-        ]);
+        $dto = BudgetPayloadDto::fromArray($request->validated());
+        $this->updateBudget->execute($budget, $dto);
 
-        $budget->update($validated);
-
-        return redirect()->route('public.finance.budget.index')->with('success', 'Budget updated successfully.');
+        return redirect()
+            ->route('public.finance.budget.index')
+            ->with('success', 'Rencana anggaran berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Budget $budget)
+    public function destroy(Budget $budget): RedirectResponse
     {
-        $budget->delete();
-        return redirect()->route('public.finance.budget.index')->with('success', 'Budget deleted successfully.');
+        $this->deleteBudget->execute($budget);
+
+        return redirect()
+            ->route('public.finance.budget.index')
+            ->with('success', 'Rencana anggaran berhasil dihapus.');
     }
 }
