@@ -37,11 +37,6 @@ class App {
     }
 
     initDOMElements() {
-        this.modeToggleBtn = document.getElementById("modeToggleBtn");
-        this.modeToggleLabel = document.getElementById("modeToggleLabel");
-        this.headerNavLinks = document.getElementById("headerNavLinks");
-        this.tabDashboardBtn = document.getElementById("tabDashboardBtn");
-        this.tabBudgetsBtn = document.getElementById("tabBudgetsBtn");
         this.dashboardSection = document.getElementById("dashboardSection");
         this.budgetsSection = document.getElementById("budgetsSection");
         this.simpleSection = document.getElementById("simpleSection");
@@ -68,9 +63,6 @@ class App {
     }
 
     bindEvents() {
-        this.modeToggleBtn?.addEventListener("click", () => this.toggleViewMode());
-        this.tabDashboardBtn?.addEventListener("click", () => this.switchTab("dashboard"));
-        this.tabBudgetsBtn?.addEventListener("click", () => this.switchTab("budgets"));
         document.getElementById("openAddBudgetFromDashBtn")?.addEventListener("click", () => this.switchTab("budgets"));
         document.getElementById("openAddExpenseBtn")?.addEventListener("click", () => this.openExpenseForm());
         document.getElementById("openAddBudgetBtn")?.addEventListener("click", () => this.openBudgetForm());
@@ -146,10 +138,6 @@ class App {
 
     applyViewModeUI() {
         const isSimple = this.viewMode === "simple";
-        if (this.modeToggleLabel) this.modeToggleLabel.textContent = isSimple ? "Complex Mode" : "Simple Mode";
-        this.modeToggleBtn?.classList.toggle("btn-primary", isSimple);
-        this.modeToggleBtn?.classList.toggle("btn-ghost", !isSimple);
-        if (this.headerNavLinks) this.headerNavLinks.style.display = isSimple ? "none" : "flex";
         if (this.dashboardSection) this.dashboardSection.style.display = isSimple ? "none" : (this.currentTab === "dashboard" ? "flex" : "none");
         if (this.budgetsSection) this.budgetsSection.style.display = isSimple ? "none" : (this.currentTab === "budgets" ? "flex" : "none");
         if (this.simpleSection) this.simpleSection.style.display = isSimple ? "flex" : "none";
@@ -166,8 +154,6 @@ class App {
         const isDash = tabName === "dashboard";
         if (this.dashboardSection) this.dashboardSection.style.display = isDash ? "flex" : "none";
         if (this.budgetsSection) this.budgetsSection.style.display = isDash ? "none" : "flex";
-        this.tabDashboardBtn?.classList.toggle("active", isDash);
-        this.tabBudgetsBtn?.classList.toggle("active", !isDash);
         updateSidebarState({ currentTab: this.currentTab, viewMode: this.viewMode });
         if (window.lucide) window.lucide.createIcons();
     }
