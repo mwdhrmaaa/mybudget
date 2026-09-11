@@ -56,6 +56,19 @@ export function updateExpense(id, payload) {
 }
 
 export function deleteExpense(id) {
-    const list = store.getExpenses().filter(item => item.id !== id);
+    const list = store.getExpenses();
+    const item = list.find(entry => entry.id === id);
+    if (!item) return null;
+    const remaining = list.filter(entry => entry.id !== id);
+    store.saveExpenses(remaining);
+    return item;
+}
+
+export function restoreExpense(expense) {
+    if (!expense || !expense.id) return;
+    const list = store.getExpenses();
+    if (list.some(entry => entry.id === expense.id)) return;
+    list.unshift(expense);
+    list.sort((a, b) => new Date(b.expenseDate) - new Date(a.expenseDate));
     store.saveExpenses(list);
 }
