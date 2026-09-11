@@ -1,5 +1,6 @@
 import { formatCurrency } from "./metrics.js";
 import { deleteBudget } from "../domain/budget.js";
+import { toast } from "./toast.js";
 
 export function renderBudgetCards(containerEl, enrichedBudgets, onEdit) {
     if (!containerEl) return;
@@ -81,8 +82,9 @@ export function renderBudgetCards(containerEl, enrichedBudgets, onEdit) {
     containerEl.querySelectorAll(".btn-del-bud").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = btn.getAttribute("data-id");
-            if (confirm("Hapus rencana anggaran ini?")) {
-                deleteBudget(id);
+            const deleted = deleteBudget(id);
+            if (deleted) {
+                toast.showBudgetDeleteToast(deleted);
             }
         });
     });
