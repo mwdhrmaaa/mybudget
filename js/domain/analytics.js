@@ -9,17 +9,31 @@ export function calculateDashboardAnalytics(expenses = [], budgets = []) {
     const startOfMonthStr = new Date(currentYear, currentMonth, 1).toISOString().split("T")[0];
     const endOfMonthStr = new Date(currentYear, currentMonth + 1, 0).toISOString().split("T")[0];
 
-    const totalExpenses = expenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
-    const thisMonthExpenses = expenses
+    const expensesOnly = expenses.filter(e => e.type !== "income");
+    const incomeOnly = expenses.filter(e => e.type === "income");
+
+    const totalExpenses = expensesOnly.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+    const totalIncome = incomeOnly.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+    const netBalance = totalIncome - totalExpenses;
+
+    const thisMonthExpenses = expensesOnly
         .filter(e => e.expenseDate >= startOfMonthStr && e.expenseDate <= endOfMonthStr)
         .reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
-    const todayExpenses = expenses
+    const thisMonthIncome = incomeOnly
+        .filter(e => e.expenseDate >= startOfMonthStr && e.expenseDate <= endOfMonthStr)
+        .reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+    const thisMonthNet = thisMonthIncome - thisMonthExpenses;
+
+    const todayExpenses = expensesOnly
+        .filter(e => e.expenseDate === todayStr)
+        .reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+    const todayIncome = incomeOnly
         .filter(e => e.expenseDate === todayStr)
         .reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
 
-    // Category Breakdown
+    // Category Breakdown (based on expenses)
     const catMap = {};
-    expenses.forEach(e => {
+    expensesOnly.forEach(e => {
         const cat = e.category || "Lainnya";
         const amt = parseFloat(e.amount) || 0;
         if (!catMap[cat]) catMap[cat] = { total: 0, count: 0 };
@@ -43,7 +57,7 @@ export function calculateDashboardAnalytics(expenses = [], budgets = []) {
         const d = new Date(now);
         d.setDate(d.getDate() - i);
         const dateStr = d.toISOString().split("T")[0];
-        const dayAmount = expenses
+        const dayAmount = expensesOnly
             .filter(e => e.expenseDate === dateStr)
             .reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
 
@@ -55,15 +69,20 @@ export function calculateDashboardAnalytics(expenses = [], budgets = []) {
     }
 
     // Budget Utilization Summary
-    const enrichedBudgets = calculateAllBudgets(budgets, expenses);
+    const enrichedBudgets = calculateAllBudgets(budgets, expensesOnly);
     const totalAllocated = enrichedBudgets.reduce((sum, b) => sum + (parseFloat(b.amount) || 0), 0);
     const totalConsumed = enrichedBudgets.reduce((sum, b) => sum + (b.usage || 0), 0);
     const overallPercent = totalAllocated > 0 ? Math.min(100, Math.round((totalConsumed / totalAllocated) * 1000) / 10) : 0;
 
     return {
         totalExpenses,
+        totalIncome,
+        netBalance,
         thisMonthExpenses,
+        thisMonthIncome,
+        thisMonthNet,
         todayExpenses,
+        todayIncome,
         topCategory,
         categoryBreakdown,
         dailyTrend,
