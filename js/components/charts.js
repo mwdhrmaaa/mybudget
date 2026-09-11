@@ -88,6 +88,35 @@ export function updateCharts(trendData, categoryData) {
                     }
                 }
             });
+        } else {
+            categoryChartInstance = new Chart(catCtx, {
+                type: "doughnut",
+                data: {
+                    labels: ["Belum ada data"],
+                    datasets: [{
+                        data: [1],
+                        backgroundColor: ["rgba(255, 255, 255, 0.05)"],
+                        borderColor: ["rgba(255, 255, 255, 0.1)"],
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "70%",
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: { color: "#5e6272", font: { size: 10 }, boxWidth: 8, padding: 8 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: () => " Belum ada transaksi tercatat"
+                            }
+                        }
+                    }
+                }
+            });
         }
     }
 }
