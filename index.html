@@ -24,14 +24,22 @@
 <body>
     <header class="site-header">
         <div class="container nav-wrapper">
-            <a href="#" class="brand-logo" id="brandLogo">
-                <div class="brand-icon">
-                    <i data-lucide="wallet-cards" style="width: 18px; height: 18px;"></i>
-                </div>
-                <span>MyBudget</span>
-            </a>
+            <div style="display: flex; align-items: center; gap: 0.85rem;">
+                <a href="#" class="brand-logo" id="brandLogo">
+                    <div class="brand-icon">
+                        <i data-lucide="wallet-cards" style="width: 18px; height: 18px;"></i>
+                    </div>
+                    <span>MyBudget</span>
+                </a>
 
-            <nav class="nav-links">
+                <!-- View Mode Switch Button -->
+                <button id="modeToggleBtn" class="btn btn-ghost" style="padding: 0.3rem 0.7rem; font-size: 0.75rem; border-radius: 9999px; gap: 0.35rem;" title="Ganti Mode Tampilan">
+                    <i id="modeToggleIcon" data-lucide="minimize-2" style="width: 13px; height: 13px; color: var(--accent-brand);"></i>
+                    <span id="modeToggleLabel">Mode Simpel</span>
+                </button>
+            </div>
+
+            <nav class="nav-links" id="headerNavLinks">
                 <button class="nav-btn active" id="tabDashboardBtn">
                     <i data-lucide="layout-dashboard" style="width: 16px; height: 16px;"></i>
                     <span>Dashboard</span>
@@ -51,7 +59,7 @@
     <main class="main-content">
         <div class="container" style="display: flex; flex-direction: column; gap: 2rem;">
             
-            <!-- SECTION 1: DASHBOARD VIEW -->
+            <!-- SECTION 1: PRO / TELEMETRY DASHBOARD -->
             <section id="dashboardSection" style="display: flex; flex-direction: column; gap: 2rem;">
                 <!-- Hero Telemetry Title -->
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
@@ -124,7 +132,7 @@
                 </div>
             </section>
 
-            <!-- SECTION 2: BUDGET VIEW -->
+            <!-- SECTION 2: PRO / BUDGET VIEW -->
             <section id="budgetsSection" style="display: none; flex-direction: column; gap: 2rem;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
                     <div>
@@ -139,6 +147,9 @@
 
                 <div id="budgetListContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.25rem;"></div>
             </section>
+
+            <!-- SECTION 3: SIMPLE / MINIMALIST VIEW -->
+            <section id="simpleSection" style="display: none; flex-direction: column; gap: 1.5rem;"></section>
 
         </div>
     </main>
@@ -158,8 +169,8 @@
 
     <footer class="site-footer">
         <div class="container footer-content">
-            <p>&copy; 2026 MyBudget. Client-Side Financial Telemetry Platform.</p>
-            <p style="color: var(--text-muted); font-size: 0.75rem;">Engineered with Semantic Atomic Architecture (Pure HTML, CSS, ESM JS).</p>
+            <p>&copy; 2026 MyBudget. Dual-Engine Financial Telemetry & Simple Logger.</p>
+            <p style="color: var(--text-muted); font-size: 0.75rem;">Engineered with Semantic Atomic Architecture.</p>
         </div>
     </footer>
 

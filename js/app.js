@@ -6,6 +6,7 @@ import { renderMetrics } from "./components/metrics.js";
 import { updateCharts } from "./components/charts.js";
 import { renderExpenseTable } from "./components/expense_view.js";
 import { renderBudgetCards } from "./components/budget_view.js";
+import { renderSimpleView } from "./components/simple_view.js";
 import { modal } from "./components/modal.js";
 
 const CATEGORIES = [
@@ -16,21 +17,30 @@ const CATEGORIES = [
 
 class App {
     constructor() {
+        this.viewMode = store.getViewMode(); // "pro" | "simple"
         this.currentTab = "dashboard";
         this.filters = { category: "", startDate: "", endDate: "", search: "" };
         this.initDOMElements();
         this.bindEvents();
         this.populateCategoryOptions();
+        this.applyViewModeUI();
         this.render();
 
         store.subscribe(() => this.render());
     }
 
     initDOMElements() {
+        this.modeToggleBtn = document.getElementById("modeToggleBtn");
+        this.modeToggleLabel = document.getElementById("modeToggleLabel");
+        this.modeToggleIcon = document.getElementById("modeToggleIcon");
+        this.headerNavLinks = document.getElementById("headerNavLinks");
+
         this.tabDashboardBtn = document.getElementById("tabDashboardBtn");
         this.tabBudgetsBtn = document.getElementById("tabBudgetsBtn");
         this.dashboardSection = document.getElementById("dashboardSection");
         this.budgetsSection = document.getElementById("budgetsSection");
+        this.simpleSection = document.getElementById("simpleSection");
+
         this.metricsContainer = document.getElementById("metricsContainer");
         this.expenseTableContainer = document.getElementById("expenseTableContainer");
         this.budgetListContainer = document.getElementById("budgetListContainer");
@@ -52,9 +62,17 @@ class App {
     }
 
     bindEvents() {
+        // Mode toggle button
+        this.modeToggleBtn?.addEventListener("click", () => {
+            this.viewMode = this.viewMode === "pro" ? "simple" : "pro";
+            store.saveViewMode(this.viewMode);
+            this.applyViewModeUI();
+            this.render();
+        });
+
         // Tab switching
-        this.tabDashboardBtn.addEventListener("click", () => this.switchTab("dashboard"));
-        this.tabBudgetsBtn.addEventListener("click", () => this.switchTab("budgets"));
+        this.tabDashboardBtn?.addEventListener("click", () => this.switchTab("dashboard"));
+        this.tabBudgetsBtn?.addEventListener("click", () => this.switchTab("budgets"));
         document.getElementById("openAddBudgetFromDashBtn")?.addEventListener("click", () => this.switchTab("budgets"));
 
         // Add buttons
@@ -81,10 +99,10 @@ class App {
             this.renderExpenses();
         };
 
-        this.filterCategory.addEventListener("change", applyFilters);
-        this.filterSearch.addEventListener("input", applyFilters);
-        this.filterStartDate.addEventListener("change", applyFilters);
-        this.filterEndDate.addEventListener("change", applyFilters);
+        this.filterCategory?.addEventListener("change", applyFilters);
+        this.filterSearch?.addEventListener("input", applyFilters);
+        this.filterStartDate?.addEventListener("change", applyFilters);
+        this.filterEndDate?.addEventListener("change", applyFilters);
         document.getElementById("resetFilterBtn")?.addEventListener("click", () => {
             this.filterCategory.value = "";
             this.filterSearch.value = "";
@@ -94,18 +112,42 @@ class App {
         });
     }
 
+    applyViewModeUI() {
+        if (this.viewMode === "simple") {
+            this.modeToggleLabel.textContent = "Mode Pro";
+            this.modeToggleBtn.title = "Beralih ke Mode Pro (Telemetry & Visualizer)";
+            this.modeToggleBtn.classList.add("btn-primary");
+            this.modeToggleBtn.classList.remove("btn-ghost");
+            this.headerNavLinks.style.display = "none";
+            this.dashboardSection.style.display = "none";
+            this.budgetsSection.style.display = "none";
+            this.simpleSection.style.display = "flex";
+        } else {
+            this.modeToggleLabel.textContent = "Mode Simpel";
+            this.modeToggleBtn.title = "Beralih ke Mode Simpel (Distraction-free)";
+            this.modeToggleBtn.classList.remove("btn-primary");
+            this.modeToggleBtn.classList.add("btn-ghost");
+            this.headerNavLinks.style.display = "flex";
+            this.simpleSection.style.display = "none";
+            this.switchTab(this.currentTab);
+        }
+        if (window.lucide) window.lucide.createIcons();
+    }
+
     switchTab(tabName) {
+        if (this.viewMode === "simple") return;
+
         this.currentTab = tabName;
         if (tabName === "dashboard") {
             this.dashboardSection.style.display = "flex";
             this.budgetsSection.style.display = "none";
-            this.tabDashboardBtn.classList.add("active");
-            this.tabBudgetsBtn.classList.remove("active");
+            this.tabDashboardBtn?.classList.add("active");
+            this.tabBudgetsBtn?.classList.remove("active");
         } else {
             this.dashboardSection.style.display = "none";
             this.budgetsSection.style.display = "flex";
-            this.tabDashboardBtn.classList.remove("active");
-            this.tabBudgetsBtn.classList.add("active");
+            this.tabDashboardBtn?.classList.remove("active");
+            this.tabBudgetsBtn?.classList.add("active");
         }
         if (window.lucide) window.lucide.createIcons();
     }
@@ -113,18 +155,25 @@ class App {
     render() {
         const allExpenses = store.getExpenses();
         const allBudgets = store.getBudgets();
-        const analytics = calculateDashboardAnalytics(allExpenses, allBudgets);
 
-        renderMetrics(this.metricsContainer, analytics);
-        updateCharts(analytics.dailyTrend, analytics.categoryBreakdown);
-        this.renderExpenses();
-        this.renderBudgets();
+        if (this.viewMode === "simple") {
+            renderSimpleView(this.simpleSection, allExpenses, allBudgets, (exp) => this.openExpenseForm(exp));
+        } else {
+            const analytics = calculateDashboardAnalytics(allExpenses, allBudgets);
+            renderMetrics(this.metricsContainer, analytics);
+            updateCharts(analytics.dailyTrend, analytics.categoryBreakdown);
+            this.renderExpenses();
+            this.renderBudgets();
+        }
+
         if (window.lucide) window.lucide.createIcons();
     }
 
     renderExpenses() {
         const filtered = getFilteredExpenses(this.filters);
-        this.filterCountLabel.textContent = `Menampilkan ${filtered.length} catatan transaksi`;
+        if (this.filterCountLabel) {
+            this.filterCountLabel.textContent = `Menampilkan ${filtered.length} catatan transaksi`;
+        }
         renderExpenseTable(this.expenseTableContainer, filtered, (exp) => this.openExpenseForm(exp));
     }
 
@@ -245,7 +294,6 @@ class App {
     }
 }
 
-// Bootstrap app
 window.addEventListener("DOMContentLoaded", () => {
     new App();
     if ("serviceWorker" in navigator) {
