@@ -1,9 +1,12 @@
 import { store } from "../store/storage.js";
 
 export function getFilteredExpenses(filters = {}) {
-    const { category, startDate, endDate, search } = filters;
+    const { category, startDate, endDate, search, type } = filters;
     let list = store.getExpenses();
 
+    if (type && type !== "all") {
+        list = list.filter(item => (item.type || "expense") === type);
+    }
     if (category) {
         list = list.filter(item => item.category === category);
     }
@@ -26,8 +29,10 @@ export function getFilteredExpenses(filters = {}) {
 
 export function addExpense(payload) {
     const list = store.getExpenses();
+    const type = payload.type === "income" ? "income" : "expense";
     const newExpense = {
         id: "exp-" + Date.now() + "-" + Math.random().toString(36).substring(2, 7),
+        type,
         amount: Math.abs(parseFloat(payload.amount)),
         description: payload.description.trim(),
         category: payload.category.trim(),
@@ -44,8 +49,10 @@ export function updateExpense(id, payload) {
     const idx = list.findIndex(item => item.id === id);
     if (idx === -1) return null;
 
+    const type = payload.type === "income" ? "income" : (payload.type === "expense" ? "expense" : (list[idx].type || "expense"));
     list[idx] = {
         ...list[idx],
+        type,
         amount: Math.abs(parseFloat(payload.amount)),
         description: payload.description.trim(),
         category: payload.category.trim(),
