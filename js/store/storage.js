@@ -3,6 +3,14 @@ import { DEFAULT_EXPENSES, DEFAULT_BUDGETS } from "./default_data.js";
 const EXPENSE_KEY = "mybudget_expenses_v2";
 const BUDGET_KEY = "mybudget_budgets_v2";
 
+// Memory storage fallback for Node.js test environment
+const memoryStore = {};
+const storageEngine = typeof localStorage !== "undefined" ? localStorage : {
+    getItem: (key) => memoryStore[key] || null,
+    setItem: (key, val) => { memoryStore[key] = String(val); },
+    removeItem: (key) => { delete memoryStore[key]; }
+};
+
 class StorageStore {
     constructor() {
         this.listeners = [];
@@ -10,11 +18,11 @@ class StorageStore {
     }
 
     init() {
-        if (!localStorage.getItem(EXPENSE_KEY)) {
-            localStorage.setItem(EXPENSE_KEY, JSON.stringify(DEFAULT_EXPENSES));
+        if (!storageEngine.getItem(EXPENSE_KEY)) {
+            storageEngine.setItem(EXPENSE_KEY, JSON.stringify(DEFAULT_EXPENSES));
         }
-        if (!localStorage.getItem(BUDGET_KEY)) {
-            localStorage.setItem(BUDGET_KEY, JSON.stringify(DEFAULT_BUDGETS));
+        if (!storageEngine.getItem(BUDGET_KEY)) {
+            storageEngine.setItem(BUDGET_KEY, JSON.stringify(DEFAULT_BUDGETS));
         }
     }
 
@@ -31,27 +39,27 @@ class StorageStore {
 
     getExpenses() {
         try {
-            return JSON.parse(localStorage.getItem(EXPENSE_KEY) || "[]");
+            return JSON.parse(storageEngine.getItem(EXPENSE_KEY) || "[]");
         } catch {
             return [];
         }
     }
 
     saveExpenses(expenses) {
-        localStorage.setItem(EXPENSE_KEY, JSON.stringify(expenses));
+        storageEngine.setItem(EXPENSE_KEY, JSON.stringify(expenses));
         this.notify();
     }
 
     getBudgets() {
         try {
-            return JSON.parse(localStorage.getItem(BUDGET_KEY) || "[]");
+            return JSON.parse(storageEngine.getItem(BUDGET_KEY) || "[]");
         } catch {
             return [];
         }
     }
 
     saveBudgets(budgets) {
-        localStorage.setItem(BUDGET_KEY, JSON.stringify(budgets));
+        storageEngine.setItem(BUDGET_KEY, JSON.stringify(budgets));
         this.notify();
     }
 
@@ -75,8 +83,8 @@ class StorageStore {
     }
 
     resetDefaults() {
-        localStorage.setItem(EXPENSE_KEY, JSON.stringify(DEFAULT_EXPENSES));
-        localStorage.setItem(BUDGET_KEY, JSON.stringify(DEFAULT_BUDGETS));
+        storageEngine.setItem(EXPENSE_KEY, JSON.stringify(DEFAULT_EXPENSES));
+        storageEngine.setItem(BUDGET_KEY, JSON.stringify(DEFAULT_BUDGETS));
         this.notify();
     }
 }
