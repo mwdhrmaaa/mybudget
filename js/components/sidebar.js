@@ -15,10 +15,22 @@ export function initSidebar({ onTabChange, onModeToggle, onAddExpense, onShowHel
     const shortcutsBtn = document.getElementById("sidebarShortcutsBtn");
 
     const isMobile = () => window.innerWidth <= 860;
+    const headerBrand = document.getElementById("headerBrandLogo");
+
+    const updateBrandVisibility = () => {
+        if (isMobile()) {
+            const isOpen = sidebar?.classList.contains("open");
+            if (headerBrand) headerBrand.style.display = isOpen ? "none" : "inline-flex";
+        } else {
+            const isCollapsed = sidebar?.classList.contains("collapsed");
+            if (headerBrand) headerBrand.style.display = isCollapsed ? "inline-flex" : "none";
+        }
+    };
 
     const closeSidebar = () => {
         sidebar?.classList.remove("open");
         backdrop?.classList.remove("active");
+        updateBrandVisibility();
     };
 
     const toggleSidebar = () => {
@@ -28,7 +40,11 @@ export function initSidebar({ onTabChange, onModeToggle, onAddExpense, onShowHel
         } else {
             sidebar?.classList.toggle("collapsed");
         }
+        updateBrandVisibility();
     };
+
+    updateBrandVisibility();
+    window.addEventListener("resize", updateBrandVisibility);
 
     toggleBtn?.addEventListener("click", toggleSidebar);
     closeBtn?.addEventListener("click", closeSidebar);
@@ -62,9 +78,8 @@ export function initSidebar({ onTabChange, onModeToggle, onAddExpense, onShowHel
 export function updateSidebarState({ currentTab = "dashboard", viewMode = "complex" } = {}) {
     const tabDash = document.getElementById("sidebarTabDashboardBtn");
     const tabBudgets = document.getElementById("sidebarTabBudgetsBtn");
-    const modeTitle = document.getElementById("sidebarModeTitle");
-    const modeDesc = document.getElementById("sidebarModeDesc");
-    const modeBadge = document.getElementById("sidebarModeBadge");
+    const modeBtn = document.getElementById("sidebarModeToggleBtn");
+    const modeLabel = document.getElementById("sidebarModeLabel");
     const modeIcon = document.getElementById("sidebarModeIcon");
 
     const isDash = currentTab === "dashboard";
@@ -72,15 +87,8 @@ export function updateSidebarState({ currentTab = "dashboard", viewMode = "compl
     tabBudgets?.classList.toggle("active", !isDash);
 
     const isSimple = viewMode === "simple";
-    if (modeTitle) modeTitle.textContent = isSimple ? "Simple Mode" : "Complex Mode";
-    if (modeDesc) modeDesc.textContent = isSimple ? "Fokus ringkas satu layar" : "Telemetri arus kas & grafik";
-
-    if (modeBadge) {
-        modeBadge.textContent = isSimple ? "Simple" : "Complex";
-        modeBadge.style.color = isSimple ? "#34d399" : "#60a5fa";
-        modeBadge.style.borderColor = isSimple ? "rgba(16, 185, 129, 0.35)" : "rgba(59, 130, 246, 0.35)";
-        modeBadge.style.background = isSimple ? "rgba(16, 185, 129, 0.12)" : "rgba(59, 130, 246, 0.12)";
-    }
+    if (modeLabel) modeLabel.textContent = isSimple ? "Simple" : "Complex";
+    modeBtn?.classList.toggle("simple", isSimple);
 
     if (modeIcon) {
         modeIcon.setAttribute("data-lucide", isSimple ? "maximize-2" : "minimize-2");

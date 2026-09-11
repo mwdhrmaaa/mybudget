@@ -28,12 +28,18 @@
         <!-- Left Slide Bar / Sidebar -->
         <aside class="app-sidebar" id="appSidebar">
             <div class="sidebar-header">
-                <a href="#" class="brand-logo" style="gap: 0.65rem;">
-                    <div class="brand-icon" style="width: 32px; height: 32px; border-radius: 8px;">
-                        <i data-lucide="wallet-cards" style="width: 17px; height: 17px;"></i>
-                    </div>
-                    <span style="font-size: 1.1rem; font-weight: 800;">MyBudget</span>
-                </a>
+                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="#" class="brand-logo" style="gap: 0.55rem;">
+                        <div class="brand-icon" style="width: 30px; height: 30px; border-radius: 8px;">
+                            <i data-lucide="wallet-cards" style="width: 16px; height: 16px;"></i>
+                        </div>
+                        <span style="font-size: 1.05rem; font-weight: 800;">MyBudget</span>
+                    </a>
+                    <button id="sidebarModeToggleBtn" class="sidebar-header-mode-btn" title="Ganti Mode (Simple / Complex)">
+                        <i data-lucide="minimize-2" id="sidebarModeIcon" style="width: 12px; height: 12px;"></i>
+                        <span id="sidebarModeLabel">Complex</span>
+                    </button>
+                </div>
                 <button id="sidebarCloseBtn" class="btn-sidebar-close" title="Tutup Menu">
                     <i data-lucide="x" style="width: 18px; height: 18px;"></i>
                 </button>
@@ -50,23 +56,6 @@
                     <button class="sidebar-nav-btn" id="sidebarTabBudgetsBtn" data-tab="budgets">
                         <i data-lucide="pie-chart" style="width: 17px; height: 17px;"></i>
                         <span>Rencana Anggaran</span>
-                    </button>
-                </div>
-
-                <!-- Mode Tampilan Section -->
-                <div class="sidebar-nav-group">
-                    <div class="sidebar-section-label">MODE TAMPILAN</div>
-                    <button class="sidebar-mode-card" id="sidebarModeToggleBtn" title="Ganti Mode Tampilan">
-                        <div style="display: flex; align-items: center; gap: 0.65rem;">
-                            <div class="mode-card-icon" id="sidebarModeIconWrapper">
-                                <i data-lucide="minimize-2" id="sidebarModeIcon" style="width: 15px; height: 15px;"></i>
-                            </div>
-                            <div style="text-align: left;">
-                                <div style="font-size: 0.825rem; font-weight: 700; color: var(--text-primary);" id="sidebarModeTitle">Complex Mode</div>
-                                <div style="font-size: 0.7rem; color: var(--text-muted);" id="sidebarModeDesc">Telemetri arus kas & grafik</div>
-                            </div>
-                        </div>
-                        <span class="mode-badge" id="sidebarModeBadge">Complex</span>
                     </button>
                 </div>
             </div>
@@ -95,9 +84,9 @@
                 <div class="container nav-wrapper">
                     <div style="display: flex; align-items: center; gap: 0.85rem;">
                         <button id="sidebarToggleBtn" class="btn btn-ghost" style="padding: 0.45rem; border-radius: var(--radius-md);" title="Buka/Tutup Slide bar">
-                            <i data-lucide="panel-left" style="width: 18px; height: 18px;"></i>
+                            <i data-lucide="menu" style="width: 18px; height: 18px;"></i>
                         </button>
-                        <a href="#" class="brand-logo" id="brandLogo">
+                        <a href="#" class="brand-logo header-brand-logo" id="headerBrandLogo">
                             <div class="brand-icon">
                                 <i data-lucide="wallet-cards" style="width: 18px; height: 18px;"></i>
                             </div>

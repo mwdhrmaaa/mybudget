@@ -106,45 +106,43 @@
     color: var(--accent-brand);
 }
 
-.sidebar-mode-card {
-    display: flex;
+.sidebar-header-mode-btn {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0.75rem 0.85rem;
-    background: var(--bg-surface-elevated);
-    border: 1.5px solid var(--border-card);
-    border-radius: var(--radius-md);
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 9999px;
+    color: #60a5fa;
+    font-size: 0.72rem;
+    font-weight: 700;
     cursor: pointer;
-    text-align: left;
     transition: var(--transition-smooth);
 }
 
-.sidebar-mode-card:hover {
-    border-color: var(--border-card-hover);
-    background: rgba(255, 255, 255, 0.04);
+.sidebar-header-mode-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5);
+    color: #93c5fd;
 }
 
-.mode-card-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: var(--radius-sm);
-    background: rgba(59, 130, 246, 0.12);
-    color: var(--accent-brand);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+.sidebar-header-mode-btn.simple {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #34d399;
 }
 
-.mode-badge {
-    font-size: 0.68rem;
-    font-weight: 700;
-    padding: 0.2rem 0.5rem;
-    border-radius: 9999px;
-    background: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
-    border: 1px solid rgba(59, 130, 246, 0.3);
+.sidebar-header-mode-btn.simple:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.5);
+    color: #6ee7b7;
+}
+
+@media (min-width: 861px) {
+    .app-sidebar:not(.collapsed) ~ .app-main .header-brand-logo {
+        display: none !important;
+    }
 }
 
 .sidebar-footer {
@@ -202,5 +200,9 @@
 
     .btn-sidebar-close {
         display: flex;
+    }
+
+    .app-sidebar.open ~ .app-main .header-brand-logo {
+        display: none !important;
     }
 }
