@@ -188,5 +188,5 @@
 
 .form-input:focus, .form-select:focus {
     border-color: var(--accent-brand);
-    box-shadow: 0 0 0 3px var(--accent-brand-glow);
+    box-shadow: 0 0 0 1px var(--accent-brand);
 }
