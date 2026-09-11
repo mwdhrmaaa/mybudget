@@ -89,7 +89,7 @@
                 <div id="metricsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;"></div>
 
                 <!-- 2 Visual Charts Grid -->
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem;">
+                <div class="charts-grid">
                     <div class="glass-panel" style="padding: 1.5rem;">
                         <div style="margin-bottom: 1.25rem;">
                             <h2 style="font-size: 1.05rem; font-weight: 700;">Tren Pengeluaran 14 Hari</h2>
@@ -187,8 +187,14 @@
 
     <footer class="site-footer">
         <div class="container footer-content">
-            <p>&copy; 2026 MyBudget. Dual-Engine Financial Telemetry & Simple Logger.</p>
-            <p style="color: var(--text-muted); font-size: 0.75rem;">Engineered with Semantic Atomic Architecture.</p>
+            <div>
+                <p>&copy; 2026 MyBudget. Dual-Engine Financial Telemetry & Simple Logger.</p>
+                <p style="color: var(--text-muted); font-size: 0.75rem;">Engineered with Semantic Atomic Architecture.</p>
+            </div>
+            <div class="connection-badge" id="connectionBadge">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Online</span>
+            </div>
         </div>
     </footer>
 
