@@ -17,7 +17,7 @@ const CATEGORIES = [
 
 class App {
     constructor() {
-        this.viewMode = store.getViewMode(); // "pro" | "simple"
+        this.viewMode = store.getViewMode(); // "complex" | "simple"
         this.currentTab = "dashboard";
         this.filters = { category: "", startDate: "", endDate: "", search: "" };
         this.initDOMElements();
@@ -64,7 +64,7 @@ class App {
     bindEvents() {
         // Mode toggle button
         this.modeToggleBtn?.addEventListener("click", () => {
-            this.viewMode = this.viewMode === "pro" ? "simple" : "pro";
+            this.viewMode = this.viewMode === "complex" ? "simple" : "complex";
             store.saveViewMode(this.viewMode);
             this.applyViewModeUI();
             this.render();
@@ -114,8 +114,8 @@ class App {
 
     applyViewModeUI() {
         if (this.viewMode === "simple") {
-            this.modeToggleLabel.textContent = "Mode Pro";
-            this.modeToggleBtn.title = "Beralih ke Mode Pro (Telemetry & Visualizer)";
+            this.modeToggleLabel.textContent = "Complex Mode";
+            this.modeToggleBtn.title = "Switch to Complex Mode (Full Analytics & Telemetry)";
             this.modeToggleBtn.classList.add("btn-primary");
             this.modeToggleBtn.classList.remove("btn-ghost");
             this.headerNavLinks.style.display = "none";
@@ -123,8 +123,8 @@ class App {
             this.budgetsSection.style.display = "none";
             this.simpleSection.style.display = "flex";
         } else {
-            this.modeToggleLabel.textContent = "Mode Simpel";
-            this.modeToggleBtn.title = "Beralih ke Mode Simpel (Distraction-free)";
+            this.modeToggleLabel.textContent = "Simple Mode";
+            this.modeToggleBtn.title = "Switch to Simple Mode (Distraction-Free Logger)";
             this.modeToggleBtn.classList.remove("btn-primary");
             this.modeToggleBtn.classList.add("btn-ghost");
             this.headerNavLinks.style.display = "flex";

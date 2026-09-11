@@ -66,7 +66,7 @@ class StorageStore {
     }
 
     getViewMode() {
-        return storageEngine.getItem(MODE_KEY) || "pro";
+        const mode = storageEngine.getItem(MODE_KEY); return (mode === "simple") ? "simple" : "complex";
     }
 
     saveViewMode(mode) {
