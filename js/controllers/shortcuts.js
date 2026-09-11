@@ -7,7 +7,8 @@ export function initKeyboardShortcuts({
     onNewTransaction,
     onToggleMode,
     onFocusSearch,
-    onCloseModal
+    onCloseModal,
+    onShowHelp
 } = {}) {
     if (typeof window === "undefined") return;
 
@@ -33,6 +34,9 @@ export function initKeyboardShortcuts({
         } else if (key === "s") {
             e.preventDefault();
             if (onToggleMode) onToggleMode();
+        } else if (e.key === "?" || (e.shiftKey && e.key === "/")) {
+            e.preventDefault();
+            if (onShowHelp) onShowHelp();
         }
     });
 }
