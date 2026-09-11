@@ -1,55 +1,103 @@
-# Daily Expense Tracker
+# MyBudget - Enterprise Daily Expense & Budget Telemetry Platform
 
-A premium, state-of-the-art daily expense tracking application built with **Laravel**. This project follows a **Universal Monolith Architecture** with a **Scope-First, Domain-Second** pattern, ensuring scalability and structural predictability.
+> Production-grade personal finance tracking, budget telemetry, and expense analytics built on Laravel 12 with Semantic Atomic Architecture.
 
-## 🚀 Features
+---
 
-- **Daily Expense Logging**: Track your spending with ease.
-- **Categorization**: Group expenses by category (Food, Transport, Entertainment, etc.).
-- **Premium UI**: Modern, responsive design with vibrant aesthetics and smooth transitions.
-- **Detailed Summary**: View daily and monthly spending summaries (Coming soon).
+## Architecture Overview
 
-## 🛠 Tech Stack
+MyBudget is architected using **Semantic Atomic Architecture** and **Single Responsibility Files (SRF)**, avoiding monolithic god-controllers:
 
-- **Backend**: Laravel 11.x
-- **Frontend**: Vanilla CSS & JavaScript
-- **Database**: MySQL/SQLite
+- **Domain-Sliced Layer**:
+  - `App\Domain\Expense`: Atomic actions (`CreateExpenseAction`, `UpdateExpenseAction`, `DeleteExpenseAction`, `GetExpenseListAction`) and co-located DTOs (`ExpensePayloadDto`, `ExpenseFilterDto`).
+  - `App\Domain\Budget`: Centralized calculation action (`CalculateBudgetUsageAction`) preventing logic duplication, accompanied by CRUD actions and DTOs.
+  - `App\Domain\Analytics`: Dashboard aggregation action (`GetDashboardAnalyticsAction`) powering Chart.js telemetry.
+- **Form Request Isolation**:
+  - Dedicated validation contracts (`StoreExpenseRequest`, `UpdateExpenseRequest`, `StoreBudgetRequest`, `UpdateBudgetRequest`).
+- **UI/UX Benchmark**:
+  - Linear and Raycast dark theme (`#090a0d`, `#111318`), responsive grid, sub-pixel typography, Lucide SVG icons, zero raw emojis.
+- **Container Trifecta**:
+  - Dockerized PHP 8.2-FPM, Nginx reverse proxy, and MariaDB container services with healthchecks.
 
-## 📂 Architecture
+---
 
-This project strictly adheres to the following standards:
-- **Controllers**: Organized by Access Scope (e.g., `Public`, `Admin`).
-- **Views**: Mirroring the Controller structure.
-- **Routing**: Clean Route Protocol (One-Line Rule, No Closures, Strict Grouping).
+## Core Features
 
-## 📥 Installation
+- **Full Lifecycle Expense Management**: Record, view, filter, edit, and delete transactions with full pagination.
+- **Dynamic Search & Filtering**: Filter by category, custom date range, and keyword instant lookup.
+- **Financial Telemetry Dashboard**:
+  - Total historical spending, current month aggregate, and daily spending counters.
+  - Category breakdown with donut distribution chart.
+  - 14-day spending trajectory line chart.
+- **Periodic Budget Tracking**:
+  - Daily, weekly, monthly, and yearly budget envelope controls.
+  - Automated quota consumption tracking with health status flags (`Safe`, `Warning`, `Over Budget`).
 
-1. Clone the repository:
+---
+
+## Single-Enter Shell Orchestration
+
+Initialize and start the entire production environment with a single command:
+
+```bash
+# Initial complete deployment (environment setup, docker build, migrations, cache warmup)
+bash deploy.sh
+
+# Zero-downtime redeployment
+bash redeploy.sh
+
+# Automated test runner
+bash runtest.sh
+```
+
+---
+
+## Manual Installation & Local Development
+
+1. **Clone repository**:
    ```bash
-   git clone <repository-url>
+   git clone -b devv https://github.com/mwdhrmaaa/mybudget.git
+   cd mybudget
    ```
-2. Install dependencies:
+
+2. **Install dependencies**:
    ```bash
-   composer install
-   npm install
+   composer install --optimize-autoloader
+   npm install && npm run build
    ```
-3. Setup environment:
+
+3. **Configure environment**:
    ```bash
    cp .env.example .env
    php artisan key:generate
    ```
-4. Run migrations:
+
+4. **Database migration**:
    ```bash
    php artisan migrate
    ```
-5. Compile assets:
+
+5. **Start server**:
    ```bash
-   npm run dev
+   php artisan serve
    ```
 
-## 📝 Standards
+---
 
-We follow strict naming conventions and directory structures as defined in our internal standard. No flat structures or closure-based routing allowed.
+## Automated Test Coverage
+
+Execute the complete feature test suite:
+
+```bash
+php artisan test
+```
+
+Test suites cover:
+- `ExpenseDomainTest`: Dashboard rendering, full CRUD lifecycle, category filtering.
+- `BudgetDomainTest`: Budget rendering, dynamic usage calculation, envelope limits.
 
 ---
-Built with ❤️ by [Antigravity](https://github.com/google-deepmind/antigravity)
+
+## License
+
+Open-source software licensed under the [MIT License](LICENSE).
