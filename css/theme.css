@@ -6,8 +6,10 @@
     --bg-surface: #111318;
     --bg-surface-elevated: #171a23;
     --bg-card: rgba(17, 19, 24, 0.85);
-    --border-subtle: rgba(255, 255, 255, 0.12);
-    --border-highlight: rgba(255, 255, 255, 0.24);
+    --border-subtle: rgba(255, 255, 255, 0.18);
+    --border-highlight: rgba(255, 255, 255, 0.38);
+    --border-card: rgba(255, 255, 255, 0.22);
+    --border-card-hover: rgba(255, 255, 255, 0.48);
 
     --text-primary: #f4f4f6;
     --text-secondary: #9da1b2;
@@ -21,10 +23,10 @@
     --status-warning: #f59e0b;
     --status-danger: #ef4444;
 
-    --radius-sm: 0px;
-    --radius-md: 0px;
-    --radius-lg: 0px;
-    --radius-xl: 0px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
 
     --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --transition-smooth: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
