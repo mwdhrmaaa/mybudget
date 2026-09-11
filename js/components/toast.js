@@ -116,6 +116,39 @@ class ToastManager {
         });
     }
 
+    showNoticeToast(title, message, isError = false, duration = 4000) {
+        if (typeof document === "undefined") return;
+        this.init();
+
+        const toastId = "toast-notice-" + Date.now();
+        const card = document.createElement("div");
+        card.className = "toast-card";
+        card.id = toastId;
+        card.style.borderColor = isError ? "rgba(239, 68, 68, 0.4)" : "var(--border-card-hover)";
+        card.innerHTML = `
+            <div class="toast-body">
+                <span class="toast-badge" style="color: ${isError ? '#f87171' : '#34d399'};">${title}</span>
+                <span class="toast-meta">${message}</span>
+            </div>
+            <div class="toast-actions">
+                <button type="button" class="btn-toast-close" title="Tutup">
+                    <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                </button>
+            </div>
+            <div class="toast-progress-bar" style="animation-duration: ${duration}ms; background: ${isError ? '#ef4444' : 'var(--accent-brand)'};"></div>
+        `;
+
+        this.container.appendChild(card);
+        const closeBtn = card.querySelector(".btn-toast-close");
+        if (closeBtn) closeBtn.addEventListener("click", () => this.dismissToast(toastId));
+
+        const timeoutId = setTimeout(() => this.dismissToast(toastId), duration);
+        this.activeToasts.set(toastId, { card, timeoutId });
+
+        requestAnimationFrame(() => card.classList.add("show"));
+        if (window.lucide) window.lucide.createIcons();
+    }
+
     dismissToast(toastId) {
         const entry = this.activeToasts.get(toastId);
         if (!entry) return;

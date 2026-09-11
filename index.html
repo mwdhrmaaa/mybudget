@@ -68,10 +68,15 @@
                         <h1 style="font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.25rem;">Telemetry Finansial</h1>
                         <p style="color: var(--text-secondary); font-size: 0.9rem;">Monitoring real-time arus kas, utilisasi pagu, dan histori transaksi.</p>
                     </div>
-                    <div style="display: flex; gap: 0.5rem;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                        <input type="file" id="importFileInput" accept=".json" style="display: none;">
+                        <button class="btn btn-ghost" id="importDataBtn" title="Pulihkan data dari berkas JSON" style="padding: 0.45rem 0.85rem; font-size: 0.8rem;">
+                            <i data-lucide="upload" style="width: 14px; height: 14px;"></i>
+                            <span>Restore JSON</span>
+                        </button>
                         <button class="btn btn-ghost" id="exportDataBtn" title="Unduh cadangan data JSON" style="padding: 0.45rem 0.85rem; font-size: 0.8rem;">
                             <i data-lucide="download" style="width: 14px; height: 14px;"></i>
-                            <span>Backup Data</span>
+                            <span>Backup JSON</span>
                         </button>
                         <button class="btn btn-ghost" id="openAddBudgetFromDashBtn" style="padding: 0.45rem 0.85rem; font-size: 0.8rem;">
                             <i data-lucide="target" style="width: 14px; height: 14px;"></i>
@@ -110,22 +115,34 @@
                 <div class="glass-panel" style="padding: 1.5rem;">
                     <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle);">
                         <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
-                            <input type="text" id="filterSearch" placeholder="Cari keterangan / kategori..." class="form-input" style="width: 220px; padding: 0.45rem 0.85rem; font-size: 0.85rem;">
+                            <input type="text" id="filterSearch" placeholder="Cari... (tekan '/' untuk fokus)" class="form-input" style="width: 210px; padding: 0.45rem 0.85rem; font-size: 0.85rem;">
                             
-                            <select id="filterCategory" class="form-select" style="width: 170px; padding: 0.45rem 0.85rem; font-size: 0.85rem;">
+                            <select id="filterType" class="form-select" style="width: 130px; padding: 0.45rem 0.85rem; font-size: 0.85rem;">
+                                <option value="all">Semua Tipe</option>
+                                <option value="expense">Pengeluaran</option>
+                                <option value="income">Pemasukan</option>
+                            </select>
+
+                            <select id="filterCategory" class="form-select" style="width: 160px; padding: 0.45rem 0.85rem; font-size: 0.85rem;">
                                 <option value="">Semua Kategori</option>
                             </select>
 
-                            <input type="date" id="filterStartDate" class="form-input" style="width: 140px; padding: 0.45rem 0.75rem; font-size: 0.85rem;">
+                            <input type="date" id="filterStartDate" class="form-input" style="width: 130px; padding: 0.45rem 0.75rem; font-size: 0.85rem;">
                             <span style="color: var(--text-muted); font-size: 0.8rem;">s/d</span>
-                            <input type="date" id="filterEndDate" class="form-input" style="width: 140px; padding: 0.45rem 0.75rem; font-size: 0.85rem;">
+                            <input type="date" id="filterEndDate" class="form-input" style="width: 130px; padding: 0.45rem 0.75rem; font-size: 0.85rem;">
 
                             <button id="resetFilterBtn" class="btn btn-ghost" style="padding: 0.45rem 0.75rem; font-size: 0.85rem;" title="Reset Filter">
                                 <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i>
                             </button>
                         </div>
-                        <div id="filterCountLabel" style="color: var(--text-secondary); font-size: 0.85rem;">
-                            Memuat data transaksi...
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div id="filterCountLabel" style="color: var(--text-secondary); font-size: 0.85rem;">
+                                Memuat data transaksi...
+                            </div>
+                            <button id="exportCsvBtn" class="btn btn-ghost" style="padding: 0.4rem 0.75rem; font-size: 0.8rem;" title="Unduh data tabel dalam format CSV spreadsheet">
+                                <i data-lucide="file-spreadsheet" style="width: 14px; height: 14px; color: #34d399;"></i>
+                                <span>Ekspor CSV</span>
+                            </button>
                         </div>
                     </div>
 
