@@ -28,21 +28,23 @@
         <!-- Left Slide Bar / Sidebar -->
         <aside class="app-sidebar" id="appSidebar">
             <div class="sidebar-header">
-                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                    <a href="#" class="brand-logo" style="gap: 0.55rem;">
-                        <div class="brand-icon" style="width: 30px; height: 30px; border-radius: 8px;">
-                            <i data-lucide="wallet-cards" style="width: 16px; height: 16px;"></i>
-                        </div>
-                        <span style="font-size: 1.05rem; font-weight: 800;">MyBudget</span>
-                    </a>
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 0.45rem;">
+                    <div style="display: flex; align-items: center; gap: 0.45rem;">
+                        <button id="sidebarCloseBtn" class="btn btn-ghost btn-sidebar-close" style="padding: 0.35rem; border-radius: var(--radius-md);" title="Tutup Slide bar">
+                            <i data-lucide="menu" style="width: 17px; height: 17px;"></i>
+                        </button>
+                        <a href="#" class="brand-logo" style="gap: 0.45rem;">
+                            <div class="brand-icon" style="width: 26px; height: 26px; border-radius: 6px;">
+                                <i data-lucide="wallet-cards" style="width: 14px; height: 14px;"></i>
+                            </div>
+                            <span style="font-size: 0.98rem; font-weight: 700;">MyBudget</span>
+                        </a>
+                    </div>
                     <button id="sidebarModeToggleBtn" class="sidebar-header-mode-btn" title="Ganti Mode (Simple / Complex)">
-                        <i data-lucide="minimize-2" id="sidebarModeIcon" style="width: 12px; height: 12px;"></i>
+                        <i data-lucide="minimize-2" id="sidebarModeIcon" style="width: 11px; height: 11px;"></i>
                         <span id="sidebarModeLabel">Complex</span>
                     </button>
                 </div>
-                <button id="sidebarCloseBtn" class="btn-sidebar-close" title="Tutup Menu">
-                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
-                </button>
             </div>
 
             <div class="sidebar-body">
@@ -83,7 +85,7 @@
             <header class="site-header">
                 <div class="container nav-wrapper">
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <button id="sidebarToggleBtn" class="btn btn-ghost" style="padding: 0.4rem; border-radius: var(--radius-md);" title="Buka/Tutup Slide bar">
+                        <button id="sidebarToggleBtn" class="btn btn-ghost header-toggle-btn" style="padding: 0.4rem; border-radius: var(--radius-md);" title="Buka/Tutup Slide bar">
                             <i data-lucide="menu" style="width: 17px; height: 17px;"></i>
                         </button>
                         <a href="#" class="brand-logo header-brand-logo" id="headerBrandLogo">

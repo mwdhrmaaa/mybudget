@@ -18,22 +18,28 @@ export function initSidebar({ onTabChange, onModeToggle, onAddExpense, onShowHel
     const headerBrand = document.getElementById("headerBrandLogo");
 
     const updateBrandVisibility = () => {
-        if (!headerBrand) return;
-        if (headerBrand.style.display) {
-            headerBrand.style.display = "";
+        const isMob = isMobile();
+        const isHidden = isMob
+            ? !!sidebar?.classList.contains("open")
+            : !sidebar?.classList.contains("collapsed");
+
+        if (headerBrand) {
+            if (headerBrand.style.display) headerBrand.style.display = "";
+            headerBrand.classList.toggle("hidden-brand", isHidden);
         }
-        if (isMobile()) {
-            const isOpen = sidebar?.classList.contains("open");
-            headerBrand.classList.toggle("hidden-brand", isOpen);
-        } else {
-            const isCollapsed = sidebar?.classList.contains("collapsed");
-            headerBrand.classList.toggle("hidden-brand", !isCollapsed);
+        if (toggleBtn) {
+            if (toggleBtn.style.display) toggleBtn.style.display = "";
+            toggleBtn.classList.toggle("hidden-toggle", isHidden);
         }
     };
 
     const closeSidebar = () => {
-        sidebar?.classList.remove("open");
-        backdrop?.classList.remove("active");
+        if (isMobile()) {
+            sidebar?.classList.remove("open");
+            backdrop?.classList.remove("active");
+        } else {
+            sidebar?.classList.add("collapsed");
+        }
         updateBrandVisibility();
     };
 

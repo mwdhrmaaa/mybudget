@@ -40,16 +40,21 @@
 
 .btn-sidebar-close {
     padding: 0.35rem;
-    display: none;
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-    background: none;
-    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
     cursor: pointer;
+    transition: var(--transition-smooth);
 }
 
 .btn-sidebar-close:hover {
     color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--border-subtle);
 }
 
 .sidebar-body {
@@ -182,14 +187,50 @@
 }
 
 #sidebarToggleBtn {
-    transition: background-color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 44px;
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    transform-origin: left center;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                margin 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.2s ease,
+                color 0.2s ease;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 #sidebarToggleBtn:active {
     transform: scale(0.92);
 }
 
+#sidebarToggleBtn.hidden-toggle {
+    max-width: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-width: 0 !important;
+    opacity: 0 !important;
+    transform: translateX(-14px) scale(0.88) !important;
+    pointer-events: none !important;
+    margin-right: -0.75rem !important;
+}
+
 @media (min-width: 861px) {
+    .app-sidebar:not(.collapsed) ~ .app-main #sidebarToggleBtn {
+        max-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+        border-width: 0;
+        opacity: 0;
+        transform: translateX(-14px) scale(0.88);
+        pointer-events: none;
+        margin-right: -0.75rem;
+    }
     .app-sidebar:not(.collapsed) ~ .app-main .header-brand-logo {
         max-width: 0;
         opacity: 0;
@@ -253,7 +294,18 @@
     }
 
     .btn-sidebar-close {
-        display: flex;
+        display: inline-flex;
+    }
+
+    .app-sidebar.open ~ .app-main #sidebarToggleBtn {
+        max-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+        border-width: 0;
+        opacity: 0;
+        transform: translateX(-14px) scale(0.88);
+        pointer-events: none;
+        margin-right: -0.75rem;
     }
 
     .app-sidebar.open ~ .app-main .header-brand-logo {
